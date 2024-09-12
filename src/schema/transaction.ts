@@ -18,6 +18,14 @@ export const addTransactionSchema = z.object({
     }),
   emoji: z.string().optional(),
   date: z.date({ required_error: "A date of the transaction is required" }),
-  category: z.string().optional(),
+  category: z
+    .object({
+      name: z.string().min(1, "Category name is required"),
+      icon: z.string().min(1, "Category icon is required"),
+    })
+    .nullable()
+    .refine((val) => val !== null, {
+      message: "Please select a category",
+    }),
   note: z.string().optional(),
 });
