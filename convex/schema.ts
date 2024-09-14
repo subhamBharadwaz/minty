@@ -11,13 +11,18 @@ export default defineSchema({
     type: v.string(),
     title: v.string(),
     amount: v.number(),
-    emoji: v.optional(v.string()),
+    emoji: v.string(),
     date: v.string(),
     category: v.object({
       name: v.string(),
       icon: v.string(),
     }),
     note: v.optional(v.string()),
+    tokenIdentifier: v.string(),
+  }).index("by_token", ["tokenIdentifier"]),
+  categories: defineTable({
+    name: v.string(),
+    icon: v.string(),
     tokenIdentifier: v.string(),
   }).index("by_token", ["tokenIdentifier"]),
 });

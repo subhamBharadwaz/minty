@@ -7,16 +7,13 @@ export const addTransactionSchema = z.object({
   title: z
     .string({ required_error: "You need to give a title for your transaction" })
     .min(3),
-  amount: z
-    .string({ required_error: "Enter a amount of the transaction" })
-    .transform((value) => {
-      const parsed = parseFloat(value);
-      if (isNaN(parsed)) {
-        throw new Error("Invalid number");
-      }
-      return parsed;
-    }),
-  emoji: z.string().optional(),
+  emoji: z.string({ required_error: "Please select an emoji" }),
+  amount: z.coerce
+    .number({
+      required_error: "Enter an amount for the transaction",
+      invalid_type_error: "Amount must be a number",
+    })
+    .min(0, "Amount must be a positive number"),
   date: z.date({ required_error: "A date of the transaction is required" }),
   category: z
     .object({
