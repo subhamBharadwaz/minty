@@ -90,3 +90,26 @@ export const updateTransaction = mutation({
     });
   },
 });
+
+export const deleteTransaction = mutation({
+  args: { id: v.id("transactions") },
+  handler: async (ctx, args) => {
+    const userId = (await ctx.auth.getUserIdentity())?.tokenIdentifier;
+    if (!userId) {
+      throw new ConvexError("Not authenticated");
+    }
+
+    const existingTransaction = await ctx.db.get(args.id);
+
+    if (
+      !existingTransaction ||
+      existingTransaction.tokenIdentifier !== userId
+    ) {
+      throw new ConvexError(
+        "Transaction not found or you don't have permission to delete this transaction",
+      );
+    }
+
+    await ctx.db.delete(args.id);
+  },
+});

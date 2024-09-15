@@ -39,10 +39,12 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { addTransactionSchema } from "@/schema/transaction";
-import { useMutation, useQuery } from "convex/react";
+import { useMutation } from "@tanstack/react-query";
+import { useConvexMutation, convexQuery } from "@convex-dev/react-query";
 import { api } from "../../../../../convex/_generated/api";
 import Link from "next/link";
 import { Transaction } from "@/types";
+import { useQuery } from "@tanstack/react-query";
 
 export const TransactionDrawer = ({
   transaction,
@@ -74,13 +76,20 @@ export const TransactionDrawer = ({
     },
   });
 
-  const createTransaction = useMutation(api.transactions.createTransaction);
-  const updateTransaction = useMutation(api.transactions.updateTransaction);
+  const { mutate: createTransaction, isPending: isTransactionAdding } =
+    useMutation({
+      mutationFn: useConvexMutation(api.transactions.createTransaction),
+    });
+
+  const { mutate: updateTransaction, isPending: isTransactionUpdatting } =
+    useMutation({
+      mutationFn: useConvexMutation(api.transactions.updateTransaction),
+    });
 
   async function onSubmit(values: z.infer<typeof addTransactionSchema>) {
     try {
       if (mode === "edit") {
-        await updateTransaction({
+        updateTransaction({
           id: transaction?._id!,
           type: values.type,
           title: values.title,
@@ -91,7 +100,7 @@ export const TransactionDrawer = ({
           note: String(values.note),
         });
       } else {
-        await createTransaction({
+        createTransaction({
           type: values.type,
           title: values.title,
           amount: values.amount,
@@ -108,7 +117,11 @@ export const TransactionDrawer = ({
     }
   }
 
-  const categories = useQuery(api.categories.getAllCategories);
+  const {
+    data: categories,
+    isPending: isCategoriesLoading,
+    error,
+  } = useQuery(convexQuery(api.categories.getAllCategories, {}));
 
   return (
     <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
@@ -323,7 +336,7 @@ export const TransactionDrawer = ({
                                     key={category.name}
                                     type="button"
                                     variant="outline"
-                                    className={`relative space-y-1 w-fit ${
+                                    className={`relative rounded-full space-y-1 w-fit ${
                                       field.value?.name === category.name
                                         ? "border-primary"
                                         : ""
@@ -333,11 +346,11 @@ export const TransactionDrawer = ({
                                       setIsCategoryOpen(false);
                                     }}
                                   >
-                                    <span className="inline-flex items-center gap-x-2">
-                                      <span className="text-xl">
+                                    <span className="inline-flex items-center gap-x-1">
+                                      <span className="text-sm inline-block">
                                         {category.icon}
                                       </span>
-                                      <span className="text-xs">
+                                      <span className="text-xs inline-block">
                                         {category.name}
                                       </span>
                                     </span>

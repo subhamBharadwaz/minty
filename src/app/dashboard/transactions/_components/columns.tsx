@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
 import { TransactionDrawer } from "./transaction-drawer";
+import { DeleteTransaction } from "./delete-transaction";
 
 export const columns: ColumnDef<Transaction>[] = [
   {
@@ -135,7 +136,9 @@ export const columns: ColumnDef<Transaction>[] = [
               <TransactionDrawer transaction={transaction} mode="edit" />
             </DropdownMenuItem>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Delete</DropdownMenuItem>
+            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+              <DeleteTransaction id={transaction._id!} />
+            </DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       );
