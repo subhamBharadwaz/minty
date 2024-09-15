@@ -33,3 +33,42 @@ export const createCategory = mutation({
     });
   },
 });
+
+export const updateCategory = mutation({
+  args: {
+    id: v.id("categories"),
+    name: v.string(),
+    icon: v.string(),
+  },
+  handler: async (ctx, args) => {
+    const userId = (await ctx.auth.getUserIdentity())?.tokenIdentifier;
+    if (!userId) {
+      throw new ConvexError("Not authenticated");
+    }
+    await ctx.db.patch(args.id, {
+      icon: args.icon,
+      name: args.name,
+      tokenIdentifier: userId,
+    });
+  },
+});
+
+export const deleteCategory = mutation({
+  args: { id: v.id("categories") },
+  handler: async (ctx, args) => {
+    const userId = (await ctx.auth.getUserIdentity())?.tokenIdentifier;
+    if (!userId) {
+      throw new ConvexError("Not authenticated");
+    }
+
+    const existingCategory = await ctx.db.get(args.id);
+
+    if (!existingCategory || existingCategory.tokenIdentifier !== userId) {
+      throw new ConvexError(
+        "Category not found or you don't have permission to delete this Category",
+      );
+    }
+
+    await ctx.db.delete(args.id);
+  },
+});
