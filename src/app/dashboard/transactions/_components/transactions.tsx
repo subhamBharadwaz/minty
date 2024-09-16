@@ -14,6 +14,8 @@ export const Transactions = () => {
     error,
   } = useQuery(convexQuery(api.transactions.getAllTransactions, {}));
 
+  console.log({ transactions });
+
   return (
     <Card className="max-w-screen-2xl mt-12  mx-auto">
       <CardHeader>

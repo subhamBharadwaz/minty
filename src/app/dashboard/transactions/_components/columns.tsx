@@ -17,6 +17,7 @@ import {
 import { MoreHorizontal } from "lucide-react";
 import { TransactionDrawer } from "./transaction-drawer";
 import { DeleteTransaction } from "./delete-transaction";
+import { cn } from "@/lib/utils";
 
 export const columns: ColumnDef<Transaction>[] = [
   {
@@ -65,20 +66,37 @@ export const columns: ColumnDef<Transaction>[] = [
     },
     cell: ({ row }) => {
       const amount = parseFloat(row.getValue("amount"));
+      const transactionType: "expense" | "income" = row.getValue("type");
+
       const formatted = new Intl.NumberFormat("en-US", {
         style: "currency",
         currency: "INR",
       }).format(amount);
 
-      return <div className="font-medium">{formatted}</div>;
+      return (
+        <div className="font-medium space-x-2">
+          {transactionType === "expense" ? "-" : "+"} {formatted}
+        </div>
+      );
     },
   },
   {
     accessorKey: "type",
     header: "Type",
     cell: ({ row }) => {
-      const transactionType: string = row.getValue("type");
-      return <div className="font-medium capitalize">{transactionType}</div>;
+      const transactionType: "expense" | "income" = row.getValue("type");
+      return (
+        <div
+          className={cn(
+            "font-semibold capitalize w-fit px-3 py-1.5 rounded-lg",
+            transactionType === "expense"
+              ? "text-destructive bg-destructive/10"
+              : "text-green-600 bg-green-600/10",
+          )}
+        >
+          {transactionType}
+        </div>
+      );
     },
   },
   {

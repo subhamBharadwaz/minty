@@ -17,27 +17,23 @@ import { Id } from "../../../../../convex/_generated/dataModel";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
-export const DeleteCategory = ({ id }: { id: Id<"categories"> }) => {
+export const DeleteBudget = ({ id }: { id: Id<"budgets"> }) => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
   const { mutate, isPending, error } = useMutation({
-    mutationFn: useConvexMutation(api.categories.deleteCategory),
+    mutationFn: useConvexMutation(api.budgets.deleteBudget),
     onSuccess: () => setDialogOpen(false),
   });
-  console.log({ error });
 
   useEffect(() => {
     if (isPending) {
       setDialogOpen(true);
     }
-    if (error) {
-      setDialogOpen(false);
-    }
-  }, [isPending, error]);
+  }, [isPending]);
 
   return (
     <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" className="p-0 h-6 w-full justify-start">
+        <Button variant="ghost" className="p-0 h-6">
           Delete
         </Button>
       </AlertDialogTrigger>
@@ -45,8 +41,8 @@ export const DeleteCategory = ({ id }: { id: Id<"categories"> }) => {
         <AlertDialogHeader>
           <AlertDialogTitle>Are you sure?</AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            category.
+            This budget has associated transactions. Deleting it will also
+            remove all related transactions. Are you sure you want to continue?{" "}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

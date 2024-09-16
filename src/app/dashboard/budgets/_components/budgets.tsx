@@ -2,7 +2,7 @@
 
 import { api } from "../../../../../convex/_generated/api";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CategoryDialog } from "./category-dialog";
+import { BudgetDialog } from "./budget-dialog";
 import { useQuery } from "@tanstack/react-query";
 import { convexQuery } from "@convex-dev/react-query";
 import { EllipsisVertical } from "lucide-react";
@@ -13,14 +13,14 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
-import { DeleteCategory } from "./delete-category";
+import { DeleteBudget } from "./delete-budget";
 
-export const Categories = () => {
+export const Budgets = () => {
   const {
-    data: categories,
+    data: budgets,
     isPending,
     error,
-  } = useQuery(convexQuery(api.categories.getAllCategories, {}));
+  } = useQuery(convexQuery(api.budgets.getAllBudgets, {}));
 
   if (isPending) {
     return (
@@ -40,7 +40,7 @@ export const Categories = () => {
     );
   }
 
-  if (categories?.length === 0) {
+  if (budgets?.length === 0) {
     return (
       <div className="flex gap-y-6 justify-center items-center flex-col">
         <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
@@ -50,7 +50,7 @@ export const Categories = () => {
           Create a category to organize your transactions and track your
           spending
         </p>
-        <CategoryDialog mode="add" />
+        <BudgetDialog mode="add" />
       </div>
     );
   }
@@ -58,14 +58,14 @@ export const Categories = () => {
   return (
     <div>
       <div className="my-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
-        {categories?.map((category) => (
+        {budgets?.map((budget) => (
           <div
             className="flex hover:bg-muted/30 transition-all duration-200 border border-muted rounded-lg px-3.5 w-[170px] truncate h-14 items-center gap-x-2.5"
-            key={category._id}
+            key={budget._id}
           >
-            <p>{category.icon}</p>
+            <p>{budget.category.icon}</p>
             <p className="font-semibold capitalize text-md xl:text-lg">
-              {category.name}
+              {budget.category.name}
             </p>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
@@ -75,14 +75,14 @@ export const Categories = () => {
               </DropdownMenuTrigger>
               <DropdownMenuContent>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  <CategoryDialog
-                    category={category}
+                  <BudgetDialog
+                    budget={budget}
                     className="h-6 pl-0 w-full justify-start"
                     mode="edit"
                   />
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  <DeleteCategory id={category._id} />
+                  <DeleteBudget id={budget._id} />
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -90,7 +90,7 @@ export const Categories = () => {
         ))}
       </div>
 
-      <CategoryDialog mode="add" />
+      <BudgetDialog mode="add" />
     </div>
   );
 };

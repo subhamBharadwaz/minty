@@ -45,6 +45,7 @@ import { api } from "../../../../../convex/_generated/api";
 import Link from "next/link";
 import { Transaction } from "@/types";
 import { useQuery } from "@tanstack/react-query";
+import { Id } from "../../../../../convex/_generated/dataModel";
 
 export const TransactionDrawer = ({
   transaction,
@@ -68,10 +69,7 @@ export const TransactionDrawer = ({
       amount: transaction?.amount,
       emoji: transaction?.emoji,
       date: transaction?.date ? new Date(transaction.date) : undefined,
-      category: {
-        icon: transaction?.category?.icon,
-        name: transaction?.category?.name,
-      },
+      categoryId: transaction?.categoryId || "",
       note: transaction?.note !== "undefined" ? transaction?.note : "",
     },
   });
@@ -96,7 +94,7 @@ export const TransactionDrawer = ({
           amount: values.amount,
           emoji: String(values.emoji),
           date: String(values.date),
-          category: { icon: values.category.icon, name: values.category.name },
+          categoryId: transaction?.categoryId!,
           note: String(values.note),
         });
       } else {
@@ -106,7 +104,7 @@ export const TransactionDrawer = ({
           amount: values.amount,
           emoji: String(values.emoji),
           date: String(values.date),
-          category: { icon: values.category.icon, name: values.category.name },
+          categoryId: values.categoryId as Id<"categories">,
           note: String(values.note),
         });
       }
@@ -169,7 +167,7 @@ export const TransactionDrawer = ({
                             className="peer sr-only"
                           />
                         </FormControl>
-                        <FormLabel className="rounded-lg border-2 border-muted px-5 py-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:bg-primary peer-data-[state=checked]:text-white [&:has([data-state=checked])]:border-primary">
+                        <FormLabel className="rounded-lg border-2 border-muted px-5 py-3 hover:bg-accent hover:text-accent-foreground peer-data-[state=checked]:bg-destructive peer-data-[state=checked]:text-white [&:has([data-state=checked])]:border-destructive">
                           Expense
                         </FormLabel>
                       </FormItem>
@@ -262,7 +260,7 @@ export const TransactionDrawer = ({
                   name="date"
                   render={({ field }) => (
                     <FormItem className="flex items-center gap-x-2.5">
-                      <Popover>
+                      <Popover modal={true}>
                         <PopoverTrigger asChild>
                           <FormControl>
                             <Button
@@ -302,10 +300,11 @@ export const TransactionDrawer = ({
 
                 <FormField
                   control={form.control}
-                  name="category"
+                  name="categoryId"
                   render={({ field }) => (
                     <FormItem className="flex items-center gap-x-2.5">
                       <Popover
+                        modal={true}
                         open={isCategoryOpen}
                         onOpenChange={setIsCategoryOpen}
                       >
@@ -315,9 +314,17 @@ export const TransactionDrawer = ({
                               {field.value ? (
                                 <>
                                   <span className="mr-2">
-                                    {field.value.icon}
+                                    {
+                                      categories?.find(
+                                        (cat) => cat._id === field.value,
+                                      )?.icon
+                                    }
                                   </span>
-                                  {field.value.name}
+                                  {
+                                    categories?.find(
+                                      (cat) => cat._id === field.value,
+                                    )?.name
+                                  }
                                 </>
                               ) : (
                                 <Tag className="size-4" />
@@ -333,16 +340,16 @@ export const TransactionDrawer = ({
                             {categories
                               ? categories.map((category) => (
                                   <Button
-                                    key={category.name}
+                                    key={category._id}
                                     type="button"
                                     variant="outline"
                                     className={`relative rounded-full space-y-1 w-fit ${
-                                      field.value?.name === category.name
+                                      field.value === category._id
                                         ? "border-primary"
                                         : ""
                                     }`}
                                     onClick={() => {
-                                      field.onChange(category);
+                                      field.onChange(category._id);
                                       setIsCategoryOpen(false);
                                     }}
                                   >
@@ -354,7 +361,7 @@ export const TransactionDrawer = ({
                                         {category.name}
                                       </span>
                                     </span>
-                                    {field.value?.name === category.name && (
+                                    {field.value === category._id && (
                                       <span className="absolute z-10 -top-2 -right-2 bg-primary inline-flex justify-center items-center rounded-full size-4">
                                         <Check className="size-3 font-bold z-20 text-white" />
                                       </span>

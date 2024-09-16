@@ -33,12 +33,19 @@ export type Transaction = {
   title: string;
   type: "expense" | "income";
   amount: number;
-  category: {
-    icon: string;
+  categoryId: Id<"categories">;
+  category?: {
     name: string;
+    icon: string;
   };
   date: string;
   emoji: string;
   note?: string;
   _creationTime?: number;
+};
+
+export type Budget = {
+  categoryId: Id<"categories">;
+  amount: number;
+  category?: { name: string; icon: string };
 };

@@ -1,5 +1,3 @@
-"use client";
-
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
@@ -10,22 +8,28 @@ import {
 } from "@/components/ui/dialog";
 import { Plus } from "lucide-react";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { cn } from "@/lib/utils";
-import { CategoryForm } from "./category-form";
-import { Id } from "../../../../../convex/_generated/dataModel";
+import { BudgetForm } from "./budget-form";
+import { Budget } from "@/types";
 
-export const CategoryDialog = ({
+export const BudgetDialog = ({
   className,
   mode = "add",
-  category,
+  budget,
 }: {
   className?: string;
   mode: "add" | "edit";
-  category?: { _id: Id<"categories">; name: string; icon: string };
+  budget?: Budget;
 }) => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (mode === "edit" && dialogOpen) {
+      // Trigger reset logic in BudgetForm via state or props
+    }
+  }, [mode, dialogOpen]);
 
   return (
     <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -36,7 +40,7 @@ export const CategoryDialog = ({
         >
           {mode === "add" ? (
             <>
-              <Plus className="size-4 mr-2" /> Add new category
+              <Plus className="size-4 mr-2" /> Add new Budget
             </>
           ) : (
             "Edit"
@@ -46,14 +50,10 @@ export const CategoryDialog = ({
       <DialogContent>
         <DialogHeader>
           <DialogTitle>
-            {mode === "add" ? "Add new Category" : "Update Category"}
+            {mode === "add" ? "Add new Budget" : "Update Budget"}
           </DialogTitle>
         </DialogHeader>
-        <CategoryForm
-          mode={mode}
-          category={category}
-          setDialogOpen={setDialogOpen}
-        />
+        <BudgetForm budget={budget} mode={mode} setDialogOpen={setDialogOpen} />
       </DialogContent>
     </Dialog>
   );

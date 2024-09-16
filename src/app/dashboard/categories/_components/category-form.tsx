@@ -1,5 +1,3 @@
-"use client";
-
 import { Loader2 } from "lucide-react";
 import {
   Form,
@@ -12,7 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import EmojiPicker from "emoji-picker-react";
-import { Dispatch, FC, SetStateAction, useState } from "react";
+import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
 import { useMutation } from "@tanstack/react-query";
 import { useConvexMutation } from "@convex-dev/react-query";
 import { useForm } from "react-hook-form";
@@ -38,11 +36,18 @@ export const CategoryForm: FC<CategoryFormProps> = ({
 
   const form = useForm<z.infer<typeof addCategorySchema>>({
     resolver: zodResolver(addCategorySchema),
-    defaultValues: {
-      icon: category?.icon,
-      name: category?.name || "",
-    },
   });
+
+  useEffect(() => {
+    if (mode === "edit" && category) {
+      if (form.getValues("icon") !== category.icon) {
+        form.setValue("icon", category.icon);
+      }
+      if (form.getValues("name") !== category.name) {
+        form.setValue("name", category.name);
+      }
+    }
+  }, [category, mode, form]);
 
   const { mutate: createCategory, isPending: isCategoryCreating } = useMutation(
     {

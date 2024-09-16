@@ -9,10 +9,30 @@ export const getAllTransactions = query({
       return [];
     }
 
-    return await ctx.db
+    const transactions = await ctx.db
       .query("transactions")
       .withIndex("by_token", (q) => q.eq("tokenIdentifier", userId))
       .collect();
+
+    const categories = await ctx.db
+      .query("categories")
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", userId))
+      .collect();
+
+    const transactionsWithCategories = transactions.map((transaction) => {
+      const category = categories.find(
+        (cat) => cat._id === transaction.categoryId,
+      );
+      return {
+        ...transaction,
+        category: {
+          name: category?.name || "Unknown Category",
+          icon: category?.icon || "🐈", // fallback if category not found
+        },
+      };
+    });
+
+    return transactionsWithCategories;
   },
 });
 
@@ -23,10 +43,7 @@ export const createTransaction = mutation({
     amount: v.number(),
     emoji: v.string(),
     date: v.string(),
-    category: v.object({
-      icon: v.string(),
-      name: v.string(),
-    }),
+    categoryId: v.id("categories"),
     note: v.string(),
   },
   handler: async (ctx, args) => {
@@ -40,10 +57,26 @@ export const createTransaction = mutation({
       amount: args.amount,
       emoji: args.emoji,
       date: args.date,
-      category: { icon: args.category.icon, name: args.category.name },
+      categoryId: args.categoryId,
       note: args.note,
       tokenIdentifier: userId,
     });
+
+    // Fetch the budget for the category
+    const budget = await ctx.db
+      .query("budgets")
+      .withIndex("by_category", (q) => q.eq("categoryId", args.categoryId))
+      .first();
+
+    if (budget && args.type === "expense") {
+      await ctx.db.patch(budget._id, {
+        remaining: budget.remaining - args.amount,
+      });
+    } else if (budget && args.type === "income") {
+      await ctx.db.patch(budget._id, {
+        remaining: budget.remaining + args.amount,
+      });
+    }
   },
 });
 
@@ -55,10 +88,7 @@ export const updateTransaction = mutation({
     amount: v.number(),
     emoji: v.string(),
     date: v.string(),
-    category: v.object({
-      icon: v.string(),
-      name: v.string(),
-    }),
+    categoryId: v.id("categories"),
     note: v.string(),
   },
   handler: async (ctx, args) => {
@@ -84,10 +114,25 @@ export const updateTransaction = mutation({
       amount: args.amount,
       emoji: args.emoji,
       date: args.date,
-      category: { icon: args.category.icon, name: args.category.name },
+      categoryId: args.categoryId,
       note: args.note,
       tokenIdentifier: userId,
     });
+
+    // If the transaction is an expense, adjust the budget's remaining amount
+    if (args.type === "expense") {
+      const budget = await ctx.db
+        .query("budgets")
+        .withIndex("by_category", (q) => q.eq("categoryId", args.categoryId))
+        .first();
+
+      if (budget) {
+        const amountDifference = args.amount - existingTransaction.amount;
+        await ctx.db.patch(budget._id, {
+          remaining: budget.remaining - amountDifference,
+        });
+      }
+    }
   },
 });
 
@@ -106,10 +151,30 @@ export const deleteTransaction = mutation({
       existingTransaction.tokenIdentifier !== userId
     ) {
       throw new ConvexError(
-        "Transaction not found or you don't have permission to delete this transaction",
+        "Transaction not found or you don't have permission to edit this transaction",
       );
     }
 
+    const budget = await ctx.db
+      .query("budgets")
+      .withIndex("by_category", (q) =>
+        q.eq("categoryId", existingTransaction.categoryId),
+      )
+      .first();
+
+    if (!budget) {
+      throw new ConvexError("No budget found for the selected category");
+    }
+    // Adjust the remaining based on the transaction type
+    let remaining = budget.remaining;
+    if (existingTransaction.type === "expense") {
+      remaining += existingTransaction.amount; // Revert the expense
+    } else if (existingTransaction.type === "income") {
+      remaining -= existingTransaction.amount; // Revert the income
+    }
+
+    //Delete the transaction and patch the budget
     await ctx.db.delete(args.id);
+    await ctx.db.patch(budget._id, { remaining: remaining });
   },
 });

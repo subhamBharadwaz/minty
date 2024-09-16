@@ -69,6 +69,25 @@ export const deleteCategory = mutation({
       );
     }
 
+    // Cehck if the category is linked to any budgets
+    const associatedBudgets = await ctx.db
+      .query("budgets")
+      .withIndex("by_category", (q) => q.eq("categoryId", args.id))
+      .collect();
+
+    // Cehck if the category is linked to any transactions
+    const associatedTransactions = await ctx.db
+      .query("transactions")
+      .withIndex("by_category", (q) => q.eq("categoryId", args.id))
+      .collect();
+
+    // Prevent deletion if linked to any budgets or transactions
+    if (associatedBudgets.length > 0 || associatedTransactions.length > 0) {
+      throw new ConvexError(
+        "Cannot delete category. It is linked to existing budgets or transactions.",
+      );
+    }
+
     await ctx.db.delete(args.id);
   },
 });
