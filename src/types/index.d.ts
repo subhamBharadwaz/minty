@@ -46,6 +46,9 @@ export type Transaction = {
 
 export type Budget = {
   categoryId: Id<"categories">;
+  _id?: Id<"budgets">;
   amount: number;
   category?: { name: string; icon: string };
+  remaining?: number;
+  spend?: number;
 };
