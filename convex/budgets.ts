@@ -19,17 +19,32 @@ export const getAllBudgets = query({
       .withIndex("by_token", (q) => q.eq("tokenIdentifier", userId))
       .collect();
 
-    const budgetWithCategories = budgets.map((budgets) => {
-      const category = categories.find((cat) => cat._id === budgets.categoryId);
+    const transactions = await ctx.db
+      .query("transactions")
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", userId))
+      .collect();
+
+    const budgetWithDetails = budgets.map((budget) => {
+      // Find corresponding category for the budget
+      const category = categories.find((cat) => cat._id === budget.categoryId);
+
+      // Calculate the total spend by summing up the amount of all transactions for this category
+      const totalSpend = transactions
+        .filter(
+          (tx) => tx.categoryId === budget.categoryId && tx.type === "expense",
+        )
+        .reduce((sum, tx) => sum + tx.amount, 0);
+
       return {
-        ...budgets,
+        ...budget,
         category: {
           name: category?.name,
           icon: category?.icon,
         },
+        spend: totalSpend,
       };
     });
-    return budgetWithCategories;
+    return budgetWithDetails;
   },
 });
 
