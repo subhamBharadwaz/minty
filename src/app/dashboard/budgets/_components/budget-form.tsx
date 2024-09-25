@@ -60,9 +60,19 @@ export const BudgetForm: FC<BudgetFormProps> = ({
     mutationFn: useConvexMutation(api.budgets.createBudget),
   });
 
+  const { mutate: updateBudget, isPending: isBudgetUpdatting } = useMutation({
+    mutationFn: useConvexMutation(api.budgets.updateBudget),
+  });
+
   async function onSubmit(values: z.infer<typeof addBudgetSchema>) {
     try {
-      if (mode === "add") {
+      if (mode === "edit") {
+        updateBudget({
+          id: budget?._id as Id<"budgets">,
+          categoryId: values.categoryId as Id<"categories">,
+          amount: values.amount,
+        });
+      } else {
         createBudget({
           categoryId: values.categoryId as Id<"categories">,
           amount: values.amount,

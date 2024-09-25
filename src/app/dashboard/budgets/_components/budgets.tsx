@@ -49,7 +49,7 @@ export const Budgets = () => {
 
   return (
     <div>
-      <div className="my-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <div className="my-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3  gap-4">
         {budgets?.map((budget) => (
           <BudgetCard key={budget._id} budget={budget} />
         ))}

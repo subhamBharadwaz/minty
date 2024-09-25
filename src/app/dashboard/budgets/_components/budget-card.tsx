@@ -5,6 +5,8 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { ArrowDownCircle, ArrowUpCircle, CircleDollarSign } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { DeleteBudget } from "./delete-budget";
 import { Progress } from "@/components/ui/progress";
@@ -18,51 +20,68 @@ export const BudgetCard = ({ budget }: { budget: Budget }) => {
   );
 
   return (
-    <div className="space-y-5 hover:bg-muted/30 transition-all duration-200 border border-muted rounded-lg p-3.5 w-[270px]">
-      <div className="flex justify-between">
-        {" "}
-        <div className="flex justify-between  items-center w-full">
+    <Card className="w-full max-w-md">
+      <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+        <CardTitle className="text-sm font-medium">Budget Overview</CardTitle>
+        <div className="flex items-center justify-between sm:justify-end  gap-x-2">
           <div className="flex items-center gap-x-2">
-            <p className="bg-muted rounded-full size-10 grid place-items-center">
+            <div className="bg-muted rounded-full size-6 p-4 flex justify-center items-center">
               <span>{budget?.category?.icon}</span>
-            </p>
-            <p className="font-bold capitalize text-md xl:text-lg">
+            </div>
+            <p className="font-semibold  capitalize text-sm xl:text-md">
               {budget?.category?.name}
             </p>
           </div>
-          <p className="font-bold text-lg xl:text-xl">₹{budget?.amount}</p>
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <EllipsisVertical className="size-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent>
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <BudgetDialog
+                  budget={budget}
+                  className="h-6 pl-0 w-full justify-start"
+                  mode="edit"
+                />
+              </DropdownMenuItem>
+              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
+                <DeleteBudget id={budget?._id!} />
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
         </div>
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild className="">
-            <Button variant="ghost" size="icon" className="">
-              <EllipsisVertical className="size-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent>
-            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-              <BudgetDialog
-                budget={budget}
-                className="h-6 pl-0 w-full justify-start"
-                mode="edit"
-              />
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-              <DeleteBudget id={budget?._id!} />
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
-      </div>
-      <div className="space-y-3">
-        <div className="flex justify-between items-center">
-          <span className="text-xs text-muted-foreground font-medium">
-            ₹{budget?.spend} Spend
-          </span>
-          <span className="text-xs text-muted-foreground font-medium">
-            ₹{budget?.remaining} Remaining
-          </span>
+      </CardHeader>
+      <CardContent>
+        <div className="text-2xl font-bold">₹{budget?.amount}</div>
+        <Progress value={progressPercentage} className="mt-2" />
+        <div className="mt-4 grid grid-cols-2 gap-4">
+          <div className="flex items-center">
+            <ArrowDownCircle className="mr-2 h-4 w-4 text-green-500" />
+            <span className="text-sm text-muted-foreground">Income</span>
+          </div>
+          <div className="text-right font-medium">₹{budget?.income}</div>
+          <div className="flex items-center">
+            <ArrowUpCircle className="mr-2 h-4 w-4 text-red-500" />
+            <span className="text-sm text-muted-foreground">Spent</span>
+          </div>
+          <div className="text-right font-medium">₹{budget?.spend}</div>
+          <div className="flex items-center">
+            <CircleDollarSign className="mr-2 h-4 w-4 text-blue-500" />
+            <span className="text-sm text-muted-foreground">
+              {Number(budget?.remaining) >= 0
+                ? "Net Remaining"
+                : "Overspent by"}
+            </span>
+          </div>
+          <div className="text-right font-medium">
+            {Number(budget?.remaining) >= 0
+              ? `₹${Number(budget?.remaining)}`
+              : `₹${Math.abs(Number(budget?.remaining))}`}
+          </div>
         </div>
-        <Progress value={progressPercentage} className="h-2" />
-      </div>
-    </div>
+      </CardContent>
+    </Card>
   );
 };

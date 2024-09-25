@@ -1,5 +1,6 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
+import { parseISO, isAfter, isBefore, subDays } from "date-fns";
 
 export const getAllTransactions = query({
   args: {},
@@ -33,6 +34,68 @@ export const getAllTransactions = query({
     });
 
     return transactionsWithCategories;
+  },
+});
+
+export const getSummary = query({
+  args: { from: v.optional(v.string()), to: v.optional(v.string()) },
+  handler: async (ctx, { from, to }) => {
+    const userId = (await ctx.auth.getUserIdentity())?.tokenIdentifier;
+    if (!userId) {
+      return {
+        totalIncome: 0,
+        totalExpense: 0,
+        transactionsByDate: [],
+        categories: [],
+      };
+    }
+    const transactions = await ctx.db
+      .query("transactions")
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", userId))
+      .collect();
+
+    const categories = await ctx.db
+      .query("categories")
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", userId))
+      .collect();
+
+    const defaultEnd = new Date();
+    const defaultStart = subDays(defaultEnd, 30);
+
+    // Parse start and end date
+    const start = from ? parseISO(from) : defaultStart;
+    const end = to ? parseISO(to) : defaultEnd;
+
+    // Filter transactions within the date range and calculate sums
+    let totalIncome = 0;
+    let totalExpense = 0;
+
+    const filteredTransactions = transactions.filter((transaction) => {
+      const transactionDate = new Date(transaction.date);
+      return isAfter(transactionDate, start) && isBefore(transactionDate, end);
+    });
+
+    filteredTransactions.forEach((transaction) => {
+      if (transaction.type === "income") {
+        totalIncome += transaction.amount;
+      } else {
+        totalExpense += transaction.amount;
+      }
+    });
+
+    const filteredCategories = categories.filter((category) => {
+      const categoryDate = new Date(category._creationTime);
+      return isAfter(categoryDate, start) && isBefore(categoryDate, end);
+    });
+
+    console.log({ categories });
+    console.log({ from, to });
+    return {
+      totalIncome,
+      totalExpense,
+      transactions: filteredTransactions,
+      categories: filteredCategories,
+    };
   },
 });
 

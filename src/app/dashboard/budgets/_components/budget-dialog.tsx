@@ -6,7 +6,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus } from "lucide-react";
+import { Pencil, Plus, Trash2 } from "lucide-react";
 
 import { useEffect, useState } from "react";
 
@@ -43,7 +43,10 @@ export const BudgetDialog = ({
               <Plus className="size-4 mr-2" /> Add new Budget
             </>
           ) : (
-            "Edit"
+            <>
+              <Pencil className="size-4 mr-2" />
+              Edit
+            </>
           )}
         </Button>
       </DialogTrigger>

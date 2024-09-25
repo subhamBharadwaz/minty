@@ -35,6 +35,12 @@ export const getAllBudgets = query({
         )
         .reduce((sum, tx) => sum + tx.amount, 0);
 
+      const totalIncome = transactions
+        .filter(
+          (tx) => tx.categoryId === budget.categoryId && tx.type === "income",
+        )
+        .reduce((sum, tx) => sum + tx.amount, 0);
+
       return {
         ...budget,
         category: {
@@ -42,6 +48,7 @@ export const getAllBudgets = query({
           icon: category?.icon,
         },
         spend: totalSpend,
+        income: totalIncome,
       };
     });
     return budgetWithDetails;
@@ -65,6 +72,41 @@ export const createBudget = mutation({
       categoryId: args.categoryId,
       amount: args.amount,
       remaining: args.amount,
+      tokenIdentifier: userId,
+    });
+  },
+});
+
+export const updateBudget = mutation({
+  args: {
+    id: v.id("budgets"),
+    categoryId: v.id("categories"),
+    amount: v.number(),
+  },
+
+  handler: async (ctx, args) => {
+    const userId = (await ctx.auth.getUserIdentity())?.tokenIdentifier;
+
+    if (!userId) {
+      throw new ConvexError("Not authenticated");
+    }
+
+    const existingBudget = await ctx.db.get(args.id);
+
+    if (!existingBudget) {
+      throw new ConvexError("Budget not found");
+    }
+
+    // Calculate the spent amount (existingAmount - remaining)
+    const spent = existingBudget.amount - existingBudget.remaining;
+
+    // Calculate the new remaining amount
+    const newRemaining = args.amount - spent;
+
+    await ctx.db.patch(args.id, {
+      categoryId: args.categoryId,
+      amount: args.amount,
+      remaining: newRemaining,
       tokenIdentifier: userId,
     });
   },
