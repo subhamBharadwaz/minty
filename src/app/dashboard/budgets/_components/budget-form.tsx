@@ -14,7 +14,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { convexQuery, useConvexMutation } from "@convex-dev/react-query";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { addBudgetSchema } from "@/schema/budget";
+import { budgetSchema } from "@/schema/budget";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { api } from "../../../../../convex/_generated/api";
 import {
@@ -27,61 +27,43 @@ import { cn } from "@/lib/utils";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import { Budget } from "@/types";
 
+type FormValues = z.input<typeof budgetSchema>;
+
 type BudgetFormProps = {
-  setDialogOpen: Dispatch<SetStateAction<boolean>>;
-  mode: "edit" | "add";
-  budget?: Budget;
+  id?: string;
+  defaultValues?: FormValues;
+  onSubmit: (values: FormValues) => void;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+
+  disabled?: boolean;
+  isPending?: boolean;
 };
 
 export const BudgetForm: FC<BudgetFormProps> = ({
-  setDialogOpen,
-  budget,
-  mode,
+  id,
+  defaultValues,
+  onSubmit,
+  disabled,
+  isPending,
+  setIsOpen,
 }) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState<boolean>(false);
-  const form = useForm<z.infer<typeof addBudgetSchema>>({
-    resolver: zodResolver(addBudgetSchema),
+  const form = useForm<z.infer<typeof budgetSchema>>({
+    resolver: zodResolver(budgetSchema),
     defaultValues: {
-      amount: budget?.amount, // Default to empty for add mode
-      categoryId: budget?.categoryId || undefined,
+      amount: defaultValues?.amount, // Default to empty for add mode
+      categoryId: defaultValues?.categoryId || undefined,
+      id: id,
     },
   });
 
-  useEffect(() => {
-    if (budget) {
-      form.reset({
-        amount: budget?.amount,
-        categoryId: budget?.categoryId,
-      });
-    }
-  }, [budget, mode, form]);
-
-  const { mutate: createBudget, isPending: isBudgetCreating } = useMutation({
-    mutationFn: useConvexMutation(api.budgets.createBudget),
-  });
-
-  const { mutate: updateBudget, isPending: isBudgetUpdatting } = useMutation({
-    mutationFn: useConvexMutation(api.budgets.updateBudget),
-  });
-
-  async function onSubmit(values: z.infer<typeof addBudgetSchema>) {
+  async function handleSubmit(values: z.infer<typeof budgetSchema>) {
     try {
-      if (mode === "edit") {
-        updateBudget({
-          id: budget?._id as Id<"budgets">,
-          categoryId: values.categoryId as Id<"categories">,
-          amount: values.amount,
-        });
-      } else {
-        createBudget({
-          categoryId: values.categoryId as Id<"categories">,
-          amount: values.amount,
-        });
-      }
-      setDialogOpen(false);
+      onSubmit(values);
+      setIsOpen(false);
       form.reset();
     } catch (error) {
-      console.log("Failed to create budget", error);
+      console.log("Failed to create category", error);
     }
   }
 
@@ -95,7 +77,7 @@ export const BudgetForm: FC<BudgetFormProps> = ({
     <Form {...form}>
       <form
         className="grid w-full items-center gap-4"
-        onSubmit={form.handleSubmit(onSubmit)}
+        onSubmit={form.handleSubmit(handleSubmit)}
       >
         <FormField
           control={form.control}
@@ -201,13 +183,25 @@ export const BudgetForm: FC<BudgetFormProps> = ({
 
         <div className="flex gap-x-2 items-center ml-auto mr-0">
           <Button type="submit" disabled={form.formState.isSubmitting}>
-            {" "}
-            {form.formState.isSubmitting && (
-              <Loader2 className="animate-spin mr-2" />
-            )}{" "}
-            {mode === "edit" ? "Update Budget" : "Add Budget"}
+            {!!id ? (
+              isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                "Save"
+              )
+            ) : isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Adding...
+              </>
+            ) : (
+              "Add"
+            )}
           </Button>
-          <Button onClick={() => setDialogOpen(false)} variant="secondary">
+          <Button onClick={() => setIsOpen(false)} variant="secondary">
             Cancel
           </Button>
         </div>

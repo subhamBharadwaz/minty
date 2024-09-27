@@ -6,6 +6,7 @@ import { columns } from "./columns";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { useQuery } from "@tanstack/react-query";
 import { convexQuery } from "@convex-dev/react-query";
+import { Loader2 } from "lucide-react";
 
 export const Transactions = () => {
   const {
@@ -22,7 +23,9 @@ export const Transactions = () => {
         <CardTitle>All Transactions</CardTitle>
       </CardHeader>
       <CardContent>
-        {transactions ? (
+        {isPending ? (
+          <Loader2 className="size-5 animate-spin mx-auto" />
+        ) : transactions ? (
           <div>
             <TransactionsTable columns={columns} data={transactions} />
           </div>

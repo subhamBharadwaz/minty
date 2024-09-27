@@ -2,7 +2,6 @@
 
 import { api } from "../../../../../convex/_generated/api";
 import { Skeleton } from "@/components/ui/skeleton";
-import { CategoryDialog } from "./category-dialog";
 import { useQuery } from "@tanstack/react-query";
 import { convexQuery } from "@convex-dev/react-query";
 import { EllipsisVertical } from "lucide-react";
@@ -14,6 +13,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import { DeleteCategory } from "./delete-category";
+import { AddCategoryDialog } from "./add-category-dialog";
+import { EditCategoryDialog } from "./edit-category-dialog";
 
 export const Categories = () => {
   const {
@@ -50,7 +51,8 @@ export const Categories = () => {
           Create a category to organize your transactions and track your
           spending
         </p>
-        <CategoryDialog mode="add" />
+
+        <AddCategoryDialog />
       </div>
     );
   }
@@ -61,12 +63,13 @@ export const Categories = () => {
         {categories?.map((category) => (
           <div
             className="flex hover:bg-muted/30 transition-all duration-200 border border-muted rounded-lg px-3.5 w-[170px] truncate h-14 items-center gap-x-2.5"
-            key={category._id}
+            key={category?._id}
           >
-            <p>{category.icon}</p>
+            <p>{category?.icon}</p>
             <p className="font-semibold capitalize text-md xl:text-lg">
-              {category.name}
+              {category?.name}
             </p>
+
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
                 <Button variant="ghost" size="icon" className="ml-auto">
@@ -74,15 +77,17 @@ export const Categories = () => {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  <CategoryDialog
-                    category={category}
-                    className="h-6 pl-0 w-full justify-start"
-                    mode="edit"
+                <DropdownMenuItem onSelect={(e) => e.preventDefault()} asChild>
+                  <EditCategoryDialog
+                    defaultValues={{
+                      name: category?.name,
+                      icon: category?.icon,
+                    }}
+                    id={category?._id}
                   />
                 </DropdownMenuItem>
                 <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                  <DeleteCategory id={category._id} />
+                  <DeleteCategory id={category?._id} />
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -90,7 +95,7 @@ export const Categories = () => {
         ))}
       </div>
 
-      <CategoryDialog mode="add" />
+      <AddCategoryDialog />
     </div>
   );
 };

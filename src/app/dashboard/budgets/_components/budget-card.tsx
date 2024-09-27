@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { DeleteBudget } from "./delete-budget";
 import { Progress } from "@/components/ui/progress";
 import { Budget } from "@/types";
-import { BudgetDialog } from "./budget-dialog";
+import { EditBudgetDialog } from "./edit-budget-dialog";
 
 export const BudgetCard = ({ budget }: { budget: Budget }) => {
   const progressPercentage = Math.min(
@@ -39,11 +39,13 @@ export const BudgetCard = ({ budget }: { budget: Budget }) => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
-              <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-                <BudgetDialog
-                  budget={budget}
-                  className="h-6 pl-0 w-full justify-start"
-                  mode="edit"
+              <DropdownMenuItem asChild onSelect={(e) => e.preventDefault()}>
+                <EditBudgetDialog
+                  defaultValues={{
+                    amount: budget?.amount,
+                    categoryId: budget?.categoryId,
+                  }}
+                  id={budget?._id!}
                 />
               </DropdownMenuItem>
               <DropdownMenuItem onSelect={(e) => e.preventDefault()}>

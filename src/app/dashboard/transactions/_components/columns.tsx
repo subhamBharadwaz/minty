@@ -15,9 +15,10 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MoreHorizontal } from "lucide-react";
-import { TransactionDrawer } from "./transaction-drawer";
 import { DeleteTransaction } from "./delete-transaction";
 import { cn } from "@/lib/utils";
+import { EditTransactionDrawer } from "./edit-transaction-drawer";
+import { Id } from "../../../../../convex/_generated/dataModel";
 
 export const columns: ColumnDef<Transaction>[] = [
   {
@@ -150,8 +151,19 @@ export const columns: ColumnDef<Transaction>[] = [
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
             <DropdownMenuLabel>Actions</DropdownMenuLabel>
-            <DropdownMenuItem onSelect={(e) => e.preventDefault()}>
-              <TransactionDrawer transaction={transaction} mode="edit" />
+            <DropdownMenuItem asChild onSelect={(e) => e.preventDefault()}>
+              <EditTransactionDrawer
+                defaultValues={{
+                  amount: transaction?.amount,
+                  type: transaction?.type,
+                  title: transaction?.title,
+                  emoji: transaction?.emoji,
+                  date: new Date(transaction?.date),
+                  categoryId: transaction?.categoryId,
+                  note: transaction?.note,
+                }}
+                id={transaction?._id as Id<"transactions">}
+              />
             </DropdownMenuItem>
             <DropdownMenuSeparator />
             <DropdownMenuItem onSelect={(e) => e.preventDefault()}>

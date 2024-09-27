@@ -33,7 +33,7 @@ export const DeleteTransaction = ({ id }: { id: Id<"transactions"> }) => {
   return (
     <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <AlertDialogTrigger asChild>
-        <Button variant="ghost" className="p-0 h-6">
+        <Button variant="ghost" className="p-0 w-full h-6 justify-start">
           Delete
         </Button>
       </AlertDialogTrigger>

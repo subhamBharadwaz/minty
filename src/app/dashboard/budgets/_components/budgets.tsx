@@ -1,11 +1,11 @@
 "use client";
 
 import { api } from "../../../../../convex/_generated/api";
-import { Skeleton } from "@/components/ui/skeleton";
-import { BudgetDialog } from "./budget-dialog";
 import { useQuery } from "@tanstack/react-query";
 import { convexQuery } from "@convex-dev/react-query";
 import { BudgetCard } from "./budget-card";
+import { BudgetSkeleton } from "./budget-skeleton";
+import { AddBudgetDialog } from "./add-budget-dialog";
 
 export const Budgets = () => {
   const {
@@ -16,17 +16,11 @@ export const Budgets = () => {
 
   if (isPending) {
     return (
-      <div className="my-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 gap-4">
+      <div className="my-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
         {Array(12)
           .fill(0)
           .map((_, index) => (
-            <Skeleton
-              key={index}
-              className="flex border px-2.5 w-[150px] h-16 border-muted items-center gap-x-2.5"
-            >
-              <Skeleton className="size-6" />
-              <Skeleton className="h-3 w-16" />
-            </Skeleton>
+            <BudgetSkeleton key={index} />
           ))}
       </div>
     );
@@ -42,7 +36,7 @@ export const Budgets = () => {
           Create a category to organize your transactions and track your
           spending
         </p>
-        <BudgetDialog mode="add" />
+        <AddBudgetDialog />
       </div>
     );
   }
@@ -55,7 +49,7 @@ export const Budgets = () => {
         ))}
       </div>
 
-      <BudgetDialog mode="add" />
+      <AddBudgetDialog />
     </div>
   );
 };

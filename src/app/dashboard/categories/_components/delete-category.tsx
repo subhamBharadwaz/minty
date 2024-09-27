@@ -16,6 +16,7 @@ import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import { Loader2 } from "lucide-react";
 import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export const DeleteCategory = ({ id }: { id: Id<"categories"> }) => {
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
@@ -23,7 +24,6 @@ export const DeleteCategory = ({ id }: { id: Id<"categories"> }) => {
     mutationFn: useConvexMutation(api.categories.deleteCategory),
     onSuccess: () => setDialogOpen(false),
   });
-  console.log({ error });
 
   useEffect(() => {
     if (isPending) {
@@ -33,6 +33,16 @@ export const DeleteCategory = ({ id }: { id: Id<"categories"> }) => {
       setDialogOpen(false);
     }
   }, [isPending, error]);
+
+  useEffect(() => {
+    if (error) {
+      toast.error("Something went wrong", {
+        description: error?.data,
+        className: "bg-destructive text-white",
+        duration: 5000,
+      });
+    }
+  }, [error]);
 
   return (
     <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
@@ -53,7 +63,7 @@ export const DeleteCategory = ({ id }: { id: Id<"categories"> }) => {
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             disabled={isPending}
-            className="bg-destructive"
+            className="bg-destructive hover:bg-destructive/90"
             onClick={() => mutate({ id })}
           >
             {isPending ? (

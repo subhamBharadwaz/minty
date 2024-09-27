@@ -10,81 +10,66 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import EmojiPicker from "emoji-picker-react";
-import { Dispatch, FC, SetStateAction, useEffect, useState } from "react";
-import { useMutation } from "@tanstack/react-query";
-import { useConvexMutation } from "@convex-dev/react-query";
+import {
+  Dispatch,
+  FC,
+  SetStateAction,
+  useEffect,
+  useRef,
+  useState,
+} from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import { addCategorySchema } from "@/schema/category";
+import { categorySchema } from "@/schema/category";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { api } from "../../../../../convex/_generated/api";
-import { Id } from "../../../../../convex/_generated/dataModel";
+
+type FormValues = z.input<typeof categorySchema>;
 
 type CategoryFormProps = {
-  setDialogOpen: Dispatch<SetStateAction<boolean>>;
-  category?: { _id: Id<"categories">; name: string; icon: string };
-  mode: "edit" | "add";
+  id?: string;
+  defaultValues?: FormValues;
+  onSubmit: (values: FormValues) => void;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
+
+  disabled?: boolean;
+  isPending?: boolean;
 };
 
 export const CategoryForm: FC<CategoryFormProps> = ({
-  setDialogOpen,
-  category,
-  mode,
+  id,
+  defaultValues,
+  onSubmit,
+  disabled,
+  isPending,
+  setIsOpen,
 }) => {
   const [emojiIcon, setEmojiIcon] = useState<string>("😀");
   const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
+  const [isFocused, setIsFocused] = useState(false);
 
-  const form = useForm<z.infer<typeof addCategorySchema>>({
-    resolver: zodResolver(addCategorySchema),
+  const form = useForm<z.infer<typeof categorySchema>>({
+    resolver: zodResolver(categorySchema),
+    defaultValues: {
+      name: defaultValues?.name || "",
+      icon: defaultValues?.icon || "😀",
+    },
   });
 
-  useEffect(() => {
-    if (mode === "edit" && category) {
-      if (form.getValues("icon") !== category.icon) {
-        form.setValue("icon", category.icon);
-      }
-      if (form.getValues("name") !== category.name) {
-        form.setValue("name", category.name);
-      }
-    }
-  }, [category, mode, form]);
-
-  const { mutate: createCategory, isPending: isCategoryCreating } = useMutation(
-    {
-      mutationFn: useConvexMutation(api.categories.createCategory),
-    },
-  );
-
-  const { mutate: updateCategory, isPending: isCategoryUpdatting } =
-    useMutation({
-      mutationFn: useConvexMutation(api.categories.updateCategory),
-    });
-
-  async function onSubmit(values: z.infer<typeof addCategorySchema>) {
+  async function handleSubmit(values: z.infer<typeof categorySchema>) {
     try {
-      if (mode === "edit") {
-        updateCategory({
-          id: category?._id!,
-          name: values.name,
-          icon: values.icon,
-        });
-      } else {
-        createCategory({
-          name: values.name,
-          icon: values.icon,
-        });
-      }
-      setDialogOpen(false);
+      onSubmit(values);
+      setIsOpen(false);
       form.reset();
     } catch (error) {
       console.log("Failed to create category", error);
     }
   }
+
   return (
     <Form {...form}>
       <form
+        onSubmit={form.handleSubmit(handleSubmit)}
         className="grid w-full items-center gap-4"
-        onSubmit={form.handleSubmit(onSubmit)}
       >
         <FormField
           control={form.control}
@@ -135,15 +120,24 @@ export const CategoryForm: FC<CategoryFormProps> = ({
           )}
         />
         <div className="flex gap-x-2 items-center ml-auto mr-0">
-          <Button type="submit" disabled={form.formState.isSubmitting}>
-            {" "}
-            {form.formState.isSubmitting && (
-              <Loader2 className="animate-spin mr-2" />
-            )}{" "}
-            {mode === "edit" ? "Update Category" : "Add Category"}
-          </Button>
-          <Button onClick={() => setDialogOpen(false)} variant="secondary">
-            Cancel
+          <Button type="submit" disabled={disabled}>
+            {!!id ? (
+              isPending ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Saving...
+                </>
+              ) : (
+                "Save"
+              )
+            ) : isPending ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Adding...
+              </>
+            ) : (
+              "Add"
+            )}
           </Button>
         </div>
       </form>
