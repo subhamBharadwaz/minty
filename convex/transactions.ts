@@ -1,6 +1,14 @@
 import { ConvexError, v } from "convex/values";
 import { mutation, query } from "./_generated/server";
-import { parseISO, isAfter, isBefore, subDays } from "date-fns";
+import {
+  parseISO,
+  isAfter,
+  isBefore,
+  subDays,
+  startOfMonth,
+  endOfMonth,
+  differenceInDays,
+} from "date-fns";
 
 export const getAllTransactions = query({
   args: {},
@@ -66,14 +74,32 @@ export const getSummary = query({
     const start = from ? parseISO(from) : defaultStart;
     const end = to ? parseISO(to) : defaultEnd;
 
+    // Calculate previous month range
+    const prevMonthStart = startOfMonth(
+      subDays(start, differenceInDays(end, start)),
+    );
+    const prevMonthEnd = endOfMonth(subDays(end, differenceInDays(end, start)));
+
     // Filter transactions within the date range and calculate sums
-    let totalIncome = 0;
-    let totalExpense = 0;
 
     const filteredTransactions = transactions.filter((transaction) => {
       const transactionDate = new Date(transaction.date);
       return isAfter(transactionDate, start) && isBefore(transactionDate, end);
     });
+
+    const prevMonthTransactions = transactions.filter((transaction) => {
+      const transactionDate = new Date(transaction.date);
+      return (
+        isAfter(transactionDate, prevMonthStart) &&
+        isBefore(transactionDate, prevMonthEnd)
+      );
+    });
+
+    // Calculate income and expenses for current and previous date ranges
+    let totalIncome = 0;
+    let totalExpense = 0;
+    let prevMonthIncome = 0;
+    let prevMonthExpense = 0;
 
     filteredTransactions.forEach((transaction) => {
       if (transaction.type === "income") {
@@ -83,16 +109,44 @@ export const getSummary = query({
       }
     });
 
+    prevMonthTransactions.forEach((transaction) => {
+      if (transaction.type === "income") {
+        prevMonthIncome += transaction.amount;
+      } else {
+        prevMonthExpense += transaction.amount;
+      }
+    });
+
+    // Calculate percentage change
+    const incomeChange = prevMonthIncome
+      ? ((totalIncome - prevMonthIncome) / prevMonthIncome) * 100
+      : 0;
+
+    const expenseChange = prevMonthExpense
+      ? ((totalExpense - prevMonthExpense) / prevMonthExpense) * 100
+      : 0;
+
     const filteredCategories = categories.filter((category) => {
       const categoryDate = new Date(category._creationTime);
       return isAfter(categoryDate, start) && isBefore(categoryDate, end);
     });
 
-    console.log({ categories });
-    console.log({ from, to });
+    // Calculate net balance
+    const netBalance = totalIncome - totalExpense;
+    const prevMonthNetBalance = prevMonthIncome - prevMonthExpense;
+
+    // Calculate percentage change in net balance
+    const netBalanceChange = prevMonthNetBalance
+      ? ((netBalance - prevMonthNetBalance) / prevMonthNetBalance) * 100
+      : 0;
+
     return {
       totalIncome,
       totalExpense,
+      incomeChange,
+      netBalanceChange,
+      expenseChange,
+      netBalance,
       transactions: filteredTransactions,
       categories: filteredCategories,
     };
@@ -239,5 +293,42 @@ export const deleteTransaction = mutation({
     //Delete the transaction and patch the budget
     await ctx.db.delete(args.id);
     await ctx.db.patch(budget._id, { remaining: remaining });
+  },
+});
+
+export const bulkDeleteTransactions = mutation({
+  args: { ids: v.array(v.id("transactions")) },
+  handler: async (ctx, args) => {
+    const userId = (await ctx.auth.getUserIdentity())?.tokenIdentifier;
+
+    if (!userId) {
+      throw new ConvexError("Not authenticated");
+    }
+
+    // Fetch all transactions to be deleted
+    const allTransactions = await ctx.db
+      .query("transactions")
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", userId))
+      .collect();
+
+    // Filter transactions by provided IDs
+    const transactionsToDelete = allTransactions.filter((transaction) =>
+      args.ids.includes(transaction._id),
+    );
+
+    if (transactionsToDelete.length === 0) {
+      throw new ConvexError("No transactions found for the provided IDs");
+    }
+
+    for (const transaction of transactionsToDelete) {
+      if (transaction.tokenIdentifier !== userId) {
+        throw new ConvexError(
+          `Transaction with ID ${transaction._id} is not owned by the user`,
+        );
+      }
+
+      // Delete the transaction
+      await ctx.db.delete(transaction._id);
+    }
   },
 });

@@ -9,10 +9,35 @@ export const getAllCategories = query({
       return [];
     }
 
-    return await ctx.db
+    const categories = await ctx.db
       .query("categories")
       .withIndex("by_token", (q) => q.eq("tokenIdentifier", userId))
       .collect();
+
+    const transactions = await ctx.db
+      .query("transactions")
+      .withIndex("by_token", (q) => q.eq("tokenIdentifier", userId))
+      .collect();
+
+    const categoriesWithTransactionData = categories.map((category) => {
+      const categoryTransactions = transactions.filter(
+        (transaction) => transaction.categoryId === category._id,
+      );
+
+      const totalTransactions = categoryTransactions.length;
+      const totalAmount = categoryTransactions.reduce(
+        (sum, transaction) => sum + transaction.amount,
+        0,
+      );
+
+      return {
+        ...category,
+        totalTransactions,
+        totalAmount,
+      };
+    });
+
+    return categoriesWithTransactionData;
   },
 });
 
@@ -81,10 +106,20 @@ export const deleteCategory = mutation({
       .withIndex("by_category", (q) => q.eq("categoryId", args.id))
       .collect();
 
+    // Cehck if the category is linked to any goal
+    const associatedGoals = await ctx.db
+      .query("goals")
+      .withIndex("by_category", (q) => q.eq("categoryId", args.id))
+      .collect();
+
     // Prevent deletion if linked to any budgets or transactions
-    if (associatedBudgets.length > 0 || associatedTransactions.length > 0) {
+    if (
+      associatedBudgets.length > 0 ||
+      associatedTransactions.length > 0 ||
+      associatedGoals.length > 0
+    ) {
       throw new ConvexError(
-        "Cannot delete category. It is linked to existing budgets or transactions.",
+        "Cannot delete category. It is linked to existing budgets, transactions or goals.",
       );
     }
 

@@ -27,4 +27,14 @@ export default defineSchema({
   })
     .index("by_token", ["tokenIdentifier"])
     .index("by_category", ["categoryId"]),
+  goals: defineTable({
+    name: v.string(),
+    amount: v.number(),
+    targetDate: v.string(),
+    progress: v.number(),
+    categoryId: v.optional(v.id("categories")),
+    tokenIdentifier: v.string(),
+  })
+    .index("by_token", ["tokenIdentifier"])
+    .index("by_category", ["categoryId"]),
 });
