@@ -1,6 +1,7 @@
 import { z } from "zod";
 
-export const addBudgetSchema = z.object({
+export const budgetSchema = z.object({
+  id: z.optional(z.string()),
   amount: z.coerce
     .number({
       required_error: "Enter an amount for the budget",

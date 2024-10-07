@@ -1,7 +1,7 @@
 import type { Icon as LucideIcon } from "lucide-react";
 import { Id } from "../../convex/_generated/dataModel";
 
-export type Icon = typeof LucideIcon;
+export type IconType = typeof LucideIcon;
 
 export type NavItem = {
   title: string;
@@ -51,4 +51,26 @@ export type Budget = {
   category?: { name: string; icon: string };
   remaining?: number;
   spend?: number;
+  income?: number;
+};
+
+export type Category = {
+  _id?: string;
+  icon: string;
+  name: string;
+  totalAmount: number;
+  totalTransactions: number;
+};
+
+export type Goal = {
+  _id?: string;
+  name: string;
+  amount: number;
+  targetDate: Date;
+  category?: { name: string; icon: string };
+  progress: number;
+  savedAmount: number;
+  remainingDays: number;
+  isCompleted: boolean;
+  categoryId: Id<"categories">;
 };

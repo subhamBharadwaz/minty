@@ -9,6 +9,7 @@ import {
 } from "@/components/ui/chart";
 import { useEffect, useState } from "react";
 import { Category, Transaction } from "@/types";
+import { cn } from "@/lib/utils";
 
 type GroupedTransactions = {
   [key: string]: number;
@@ -43,9 +44,11 @@ function groupTransactionsByCategory(
 export const TopCategoriesChart = ({
   transactions,
   categories,
+  className,
 }: {
   transactions: Transaction[];
   categories: Category[];
+  className?: string;
 }) => {
   const [chartData, setChartData] = useState<
     { fill: string; name: string; total: number }[]
@@ -83,7 +86,7 @@ export const TopCategoriesChart = ({
   }, [transactions, categories]);
 
   return (
-    <Card className="border-b py-5">
+    <Card className={cn("border-b py-5", className)}>
       <CardHeader>
         <CardTitle>Transactions</CardTitle>
       </CardHeader>

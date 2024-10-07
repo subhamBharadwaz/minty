@@ -19,6 +19,7 @@ import {
 import { useEffect, useState } from "react";
 import { Transaction } from "@/types";
 import { parse, format } from "date-fns";
+import { cn } from "@/lib/utils";
 
 const chartConfig = {
   income: {
@@ -63,8 +64,10 @@ function groupTransactionsByDate(transactions: Transaction[]) {
 
 export const TransactionsChart = ({
   transactions,
+  className,
 }: {
   transactions: Transaction[];
+  className?: string;
 }) => {
   const [chartData, setChartData] = useState([]);
 
@@ -74,7 +77,7 @@ export const TransactionsChart = ({
   }, [transactions]);
 
   return (
-    <Card className="border-b py-5">
+    <Card className={cn("border-b py-5", className)}>
       <CardHeader>
         <CardTitle>Transactions</CardTitle>
       </CardHeader>
