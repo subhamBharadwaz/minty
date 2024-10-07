@@ -37,6 +37,7 @@ export const DeleteCategory = ({ id }: { id: Id<"categories"> }) => {
   useEffect(() => {
     if (error) {
       toast.error("Something went wrong", {
+        //@ts-ignore
         description: error?.data,
         className: "bg-destructive text-white",
         duration: 5000,
