@@ -1,7 +1,7 @@
 export default {
   providers: [
     {
-      domain: "https://striking-asp-56.clerk.accounts.dev/",
+      domain: "https://clerk.minty.subhambharadwaz.com/",
       applicationID: "convex",
     },
   ],
