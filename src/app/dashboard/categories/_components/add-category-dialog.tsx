@@ -36,8 +36,8 @@ export const AddCategoryDialog: FC<CategoryDialogProps> = ({ className }) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={handleOpenChange}>
-      <DialogTrigger asChild>
-        <Button className={cn(className)}>
+      <DialogTrigger asChild className={cn(className)}>
+        <Button>
           <Plus className="h-4 w-4 mr-2" /> Add new category
         </Button>
       </DialogTrigger>
