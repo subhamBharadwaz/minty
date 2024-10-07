@@ -1,7 +1,7 @@
 export default {
   providers: [
     {
-      domain: "https://clerk.minty.subhambharadwaz.com/",
+      domain: process.env.CONVEX_DOMAIN as string,
       applicationID: "convex",
     },
   ],
