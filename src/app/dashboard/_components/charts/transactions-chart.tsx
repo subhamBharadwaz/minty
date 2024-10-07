@@ -73,6 +73,7 @@ export const TransactionsChart = ({
 
   useEffect(() => {
     const processedData = groupTransactionsByDate(transactions);
+    //@ts-ignore
     setChartData(processedData);
   }, [transactions]);
 
