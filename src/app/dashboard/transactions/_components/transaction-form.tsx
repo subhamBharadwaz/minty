@@ -1,20 +1,9 @@
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Plus, Tag, Check, Loader2 } from "lucide-react";
-import {
-  Drawer,
-  DrawerClose,
-  DrawerContent,
-  DrawerDescription,
-  DrawerFooter,
-  DrawerHeader,
-  DrawerTitle,
-  DrawerTrigger,
-} from "@/components/ui/drawer";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { Input } from "@/components/ui/input";
 import EmojiPicker from "emoji-picker-react";
 import { Dispatch, FC, SetStateAction, useState } from "react";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import {
   Form,
   FormControl,
@@ -338,7 +327,7 @@ export const TransactionForm: FC<TransactionFormProps> = ({
             )}
           />
         </div>
-        <DrawerFooter className="max-w-lg pl-0">
+        <div className="flex items-center gap-x-2.5">
           <Button type="submit" disabled={form.formState.isSubmitting}>
             {!!id ? (
               isPending ? (
@@ -358,10 +347,8 @@ export const TransactionForm: FC<TransactionFormProps> = ({
               "Add"
             )}{" "}
           </Button>
-          <DrawerClose asChild>
-            <Button variant="outline">Cancel</Button>
-          </DrawerClose>
-        </DrawerFooter>
+          <Button variant="outline">Cancel</Button>
+        </div>
       </form>
     </Form>
   );

@@ -49,7 +49,7 @@ export const DeleteTransaction = ({ id }: { id: Id<"transactions"> }) => {
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction
             disabled={isPending}
-            className="bg-destructive"
+            className="bg-destructive hover:bg-destructive/90"
             onClick={() => mutate({ id })}
           >
             {isPending ? (

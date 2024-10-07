@@ -87,16 +87,16 @@ export const columns: ColumnDef<Transaction>[] = [
     cell: ({ row }) => {
       const transactionType: "expense" | "income" = row.getValue("type");
       return (
-        <div
+        <span
           className={cn(
-            "font-semibold capitalize w-fit px-3 py-1.5 rounded-lg",
+            "inline-block font-medium text-sm capitalize w-fit px-2 py-1 rounded-md",
             transactionType === "expense"
               ? "text-destructive bg-destructive/10"
               : "text-green-600 bg-green-600/10",
           )}
         >
           {transactionType}
-        </div>
+        </span>
       );
     },
   },

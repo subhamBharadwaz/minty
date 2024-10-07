@@ -10,12 +10,10 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ScrollArea } from "@/components/ui/scroll-area";
 
-import { cn } from "@/lib/utils";
-
-import { useConvexMutation, convexQuery } from "@convex-dev/react-query";
+import { useConvexMutation } from "@convex-dev/react-query";
 import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
 import { TransactionForm } from "./transaction-form";
@@ -28,14 +26,20 @@ export const AddTransactionDrawer = () => {
     mutationFn: useConvexMutation(api.transactions.createTransaction),
   });
 
+  const dialogContentRef = useRef<HTMLDivElement>(null);
+
   return (
     <Drawer open={isOpen} onOpenChange={setIsOpen}>
       <DrawerTrigger asChild>
-        <Button>
-          <Plus className="size-4 mr-2" /> Add new
+        <Button
+          onClick={(e) => {
+            setIsOpen(true);
+          }}
+        >
+          <Plus className="size-4 mr-2" /> Add new transaction
         </Button>
       </DrawerTrigger>
-      <DrawerContent className="container w-full">
+      <DrawerContent className="container w-full" ref={dialogContentRef}>
         <DrawerHeader className="pl-2">
           <DrawerTitle>New Transaction</DrawerTitle>
           <DrawerDescription>Add new...</DrawerDescription>
