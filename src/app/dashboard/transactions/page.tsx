@@ -1,5 +1,4 @@
 import { AddTransactionDrawer } from "./_components/add-transaction-drawer";
-import { TransactionDrawer } from "./_components/transaction-drawer";
 import { Transactions } from "./_components/transactions";
 
 export default function TransactionsPage() {
