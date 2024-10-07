@@ -7,7 +7,7 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn, formatAmountInINR } from "@/lib/utils";
 import { cva, VariantProps } from "class-variance-authority";
 import { LucideIcon } from "lucide-react";
 import { FC } from "react";
@@ -17,6 +17,7 @@ const cardVariant = cva("shrink-0 rounded-md p-3", {
     variant: {
       success: "bg-primary/20",
       danger: "bg-destructive/20",
+      blue: "bg-blue-500/20",
     },
   },
   defaultVariants: {
@@ -29,6 +30,7 @@ const iconVariant = cva("size-6", {
     variant: {
       success: "text-primary",
       danger: "text-destructive",
+      blue: "text-blue-500",
     },
   },
   defaultVariants: {
@@ -66,7 +68,10 @@ export const DataCard: FC<DataCardProps> = ({
       </CardHeader>
 
       <CardContent>
-        <span className="text-lg lg:text-xl  font-bold"> ₹{value}</span>
+        <span className="text-lg lg:text-xl  font-bold">
+          {" "}
+          {formatAmountInINR(value)}
+        </span>
       </CardContent>
     </Card>
   );
