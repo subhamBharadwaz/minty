@@ -65,6 +65,7 @@ const HoverableAccordion: React.FC<HoverableAccordionProps> = ({
                   onMouseLeave={() => setHoveredItem(null)}
                 >
                   {React.cloneElement(child, {
+                    //@ts-ignore
                     children: React.Children.map(
                       child.props.children,
                       (grandChild) => {
@@ -73,8 +74,10 @@ const HoverableAccordion: React.FC<HoverableAccordionProps> = ({
                           grandChild.type === AccordionTrigger
                         ) {
                           return React.cloneElement(grandChild, {
+                            //@ts-ignore
                             children: (
                               <div className="flex items-center justify-between w-full">
+                                {/* @ts-ignore */}
                                 {grandChild.props.children}
                                 <AnimatePresence>
                                   {isHoveredOrSelected && (

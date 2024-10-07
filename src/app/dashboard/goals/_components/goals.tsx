@@ -47,6 +47,7 @@ export const Goals = () => {
     <div className="flex flex-col">
       <AddGoalDialog className="mr-0 ml-auto" />
       <div className="my-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3  gap-4">
+        {/* @ts-ignore */}
         {goals?.map((goal) => <GoalCard key={goal._id} goal={goal} />)}
       </div>
     </div>

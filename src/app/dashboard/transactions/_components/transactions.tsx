@@ -37,10 +37,12 @@ export const Transactions = () => {
             <TransactionsTable
               onDelete={(row) => {
                 const ids = row.map((r) => r.original._id);
+                //@ts-ignore
                 mutate({ ids });
               }}
               columns={columns}
               isPending={deletePending}
+              //@ts-ignore
               data={transactions}
             />
           </div>

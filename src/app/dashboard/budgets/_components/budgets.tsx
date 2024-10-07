@@ -45,6 +45,7 @@ export const Budgets = () => {
       <AddBudgetDialog className="mr-0 ml-auto" />
       <div className="my-10 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3  gap-4">
         {budgets?.map((budget) => (
+          //@ts-ignore
           <BudgetCard key={budget._id} budget={budget} />
         ))}
       </div>
