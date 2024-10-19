@@ -14,7 +14,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useConvexMutation } from "@convex-dev/react-query";
 import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { toast } from "sonner";
 
@@ -49,6 +49,7 @@ export const DeleteCategory = ({ id }: { id: Id<"categories"> }) => {
     <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <AlertDialogTrigger asChild>
         <Button variant="ghost" className="p-0 h-6 w-full justify-start">
+          <Trash2 className="size-4 mr-2" />
           Delete
         </Button>
       </AlertDialogTrigger>

@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -58,6 +59,10 @@ export const EditBudgetDialog: FC<BudgetDialogProps> = ({
       <DialogContent ref={dialogContentRef}>
         <DialogHeader>
           <DialogTitle>Edit Budget</DialogTitle>
+          <DialogDescription>
+            Adjust your budget to reflect changes in your financial priorities
+            or goals.
+          </DialogDescription>
         </DialogHeader>
         <BudgetForm
           key={isOpen ? "open" : "closed"}

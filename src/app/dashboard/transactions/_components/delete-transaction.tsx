@@ -14,7 +14,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useConvexMutation } from "@convex-dev/react-query";
 import { api } from "../../../../../convex/_generated/api";
 import { Id } from "../../../../../convex/_generated/dataModel";
-import { Loader2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 
 export const DeleteTransaction = ({ id }: { id: Id<"transactions"> }) => {
@@ -34,6 +34,7 @@ export const DeleteTransaction = ({ id }: { id: Id<"transactions"> }) => {
     <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <AlertDialogTrigger asChild>
         <Button variant="ghost" className="p-0 w-full h-6 justify-start">
+          <Trash2 className="size-4 text-foreground mr-2" />
           Delete
         </Button>
       </AlertDialogTrigger>

@@ -40,7 +40,8 @@ export const AddGoalDialog: FC<GoalDialogProps> = ({ className }) => {
         <DialogHeader className="mb-3">
           <DialogTitle>Add New Goal</DialogTitle>
           <DialogDescription>
-            Set up a new financial goal. Click save when you&apos;re done.
+            Define a saving target or a financial milestone to work toward. Fill
+            in the goal amount and deadline
           </DialogDescription>
         </DialogHeader>
 

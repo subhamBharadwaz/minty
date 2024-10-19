@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -19,6 +20,7 @@ import { useConvexMutation } from "@convex-dev/react-query";
 import { z } from "zod";
 import { categorySchema } from "@/schema/category";
 import { Id } from "../../../../../convex/_generated/dataModel";
+import { Pencil } from "lucide-react";
 
 type FormValues = z.input<typeof categorySchema>;
 
@@ -56,12 +58,17 @@ export const EditCategoryDialog: FC<CategoryDialogProps> = ({
             setIsOpen(true);
           }}
         >
+          <Pencil className="size-4 mr-2" />
           Edit
         </Button>
       </DialogTrigger>
       <DialogContent ref={dialogContentRef}>
         <DialogHeader>
           <DialogTitle>Edit Category</DialogTitle>
+          <DialogDescription>
+            Update the name or details of this category to reflect changes in
+            your organization preferences.
+          </DialogDescription>
         </DialogHeader>
         <CategoryForm
           key={isOpen ? "open" : "closed"}

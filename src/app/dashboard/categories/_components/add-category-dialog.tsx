@@ -14,10 +14,10 @@ import { FC, useState } from "react";
 
 import { cn } from "@/lib/utils";
 import { CategoryForm } from "./category-form";
-import { Id } from "../../../../../convex/_generated/dataModel";
 import { useMutation } from "@tanstack/react-query";
 import { api } from "../../../../../convex/_generated/api";
 import { useConvexMutation } from "@convex-dev/react-query";
+import { DialogDescription } from "@/components/ui/dialog";
 
 type CategoryDialogProps = {
   className?: string;
@@ -44,6 +44,10 @@ export const AddCategoryDialog: FC<CategoryDialogProps> = ({ className }) => {
       <DialogContent>
         <DialogHeader>
           <DialogTitle>Add new Category</DialogTitle>
+          <DialogDescription>
+            Organize your transactions by creating a new category for better
+            financial management.
+          </DialogDescription>
         </DialogHeader>
         <CategoryForm
           onSubmit={(values) => {

@@ -19,6 +19,7 @@ import { TransactionForm } from "./transaction-form";
 import { useMutation } from "@tanstack/react-query";
 import { transactionSchema } from "@/schema/transaction";
 import { z } from "zod";
+import { Pencil } from "lucide-react";
 
 type FormValues = z.input<typeof transactionSchema>;
 
@@ -49,13 +50,16 @@ export const EditTransactionDrawer: FC<EditTransactionDialogProps> = ({
             setIsOpen(true);
           }}
         >
+          <Pencil className="mr-2 size-4" />
           Edit
         </Button>
       </DrawerTrigger>
       <DrawerContent className="container w-full" ref={dialogContentRef}>
         <DrawerHeader className="pl-2">
-          <DrawerTitle>Update Transaction</DrawerTitle>
-          <DrawerDescription>Add new...</DrawerDescription>
+          <DrawerTitle>Edit Transaction</DrawerTitle>
+          <DrawerDescription>
+            Update the details of this transaction to ensure accurate tracking.
+          </DrawerDescription>
         </DrawerHeader>
         <ScrollArea className="h-[calc(100vh-6rem)] w-full">
           <TransactionForm

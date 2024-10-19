@@ -45,7 +45,7 @@ export default function HomeNav({ items }: { items?: NavItem[] }) {
                 key={item.title}
                 href={item.href}
                 className={cn(
-                  "text-sm font-medium transition-colors hover:text-primary",
+                  "text-sm font-medium transition-all hover:underline",
                   isScrolled ? "text-foreground" : "text-foreground/90",
                 )}
               >

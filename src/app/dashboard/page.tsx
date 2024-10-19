@@ -11,7 +11,7 @@ export default async function DashbaordPage() {
     <section>
       <div className="" />
 
-      <div className="space-y-10 container">
+      <div className="space-y-10">
         <div className="space-y-1">
           <h1 className="text-xl font-semibold lg:text-2xl">
             Welcome Back, {user?.firstName?.split(" ")[0]} 👋

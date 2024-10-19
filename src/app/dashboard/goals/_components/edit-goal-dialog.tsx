@@ -7,7 +7,7 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Plus } from "lucide-react";
+import { Pencil, Plus } from "lucide-react";
 
 import { FC, useState } from "react";
 
@@ -46,14 +46,15 @@ export const EditGoalDialog: FC<GoalDialogProps> = ({
           variant="ghost"
           className={cn(className, "w-full justify-start cursor-pointer")}
         >
-          Update Goal
+          <Pencil className="size-4 mr-2 text-foreground" />
+          Edit
         </Button>
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Create New Goal</DialogTitle>
+          <DialogTitle>Edit Goal</DialogTitle>
           <DialogDescription>
-            Set up a new financial goal. Click save when you&apos;re done.
+            Modify the target or timeline for this financial goal.
           </DialogDescription>
         </DialogHeader>
         <GoalForm

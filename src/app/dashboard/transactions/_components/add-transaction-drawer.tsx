@@ -42,7 +42,10 @@ export const AddTransactionDrawer = () => {
       <DrawerContent className="container w-full" ref={dialogContentRef}>
         <DrawerHeader className="pl-2">
           <DrawerTitle>New Transaction</DrawerTitle>
-          <DrawerDescription>Add new...</DrawerDescription>
+          <DrawerDescription>
+            Record your income or expenses to keep track of your finances. Fill
+            in the details below.
+          </DrawerDescription>
         </DrawerHeader>
         <ScrollArea className="h-[calc(100vh-6rem)] w-full">
           <TransactionForm

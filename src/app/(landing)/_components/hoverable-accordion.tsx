@@ -76,7 +76,7 @@ const HoverableAccordion: React.FC<HoverableAccordionProps> = ({
                           return React.cloneElement(grandChild, {
                             //@ts-ignore
                             children: (
-                              <div className="flex items-center justify-between w-full">
+                              <div className="grid pr-[.5rem] items-center [grid-auto-columns:1fr] [grid-template-columns:auto_1fr_auto] [grid-template-rows:auto] gap-x-0 text-left [grid-column-gap:1rem] lg:[grid-column-gap:1.5rem] w-full">
                                 {/* @ts-ignore */}
                                 {grandChild.props.children}
                                 <AnimatePresence>

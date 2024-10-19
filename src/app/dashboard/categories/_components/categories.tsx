@@ -16,7 +16,7 @@ export const Categories = () => {
 
   if (isPending) {
     return (
-      <div className="my-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
+      <div className="my-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {Array(12)
           .fill(0)
           .map((_, index) => (
@@ -45,7 +45,7 @@ export const Categories = () => {
   return (
     <div className="flex flex-col">
       <AddCategoryDialog className="ml-auto mr-0" />
-      <div className="my-10 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-4 gap-4">
+      <div className="my-10 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
         {categories?.map((category) => (
           <CategoryCard category={category} key={category?._id} />
         ))}

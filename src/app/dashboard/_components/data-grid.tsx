@@ -90,7 +90,7 @@ export const DataGrid = () => {
       <div className="grid items-center grid-cols-1 lg:grid-cols-3 gap-6">
         <TransactionsChart
           transactions={transactions as Transaction[]}
-          className="col-span-2"
+          className="lg:col-span-2"
         />
         <TopCategoriesChart
           transactions={transactions as Transaction[]}

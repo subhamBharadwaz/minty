@@ -2,6 +2,7 @@ import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
+  DialogDescription,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
@@ -37,7 +38,11 @@ export const AddBudgetDialog: FC<BudgetDialogProps> = ({ className }) => {
       </DialogTrigger>
       <DialogContent>
         <DialogHeader>
-          <DialogTitle>Add new Budget</DialogTitle>
+          <DialogTitle>Create a New Budget</DialogTitle>
+          <DialogDescription>
+            Set a spending limit for specific categories to manage your finances
+            more effectively.
+          </DialogDescription>
         </DialogHeader>
         <BudgetForm
           onSubmit={(values) => {

@@ -70,11 +70,11 @@ export const HowItWorksSection = () => {
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4, ease: "easeIn" }}
       >
-        <h3 className="tracking-wider uppercase text-purple-700 text-lg">
+        <h3 className="tracking-wider uppercase text-purple-700 text-sm lg:text-lg">
           How it works
         </h3>
         <div className="overflow-hidden">
-          <p className="text-4xl font-medium leading-tight max-w-6xl">
+          <p className="text-xl md:text-2xl xl:text-4xl font-medium leading-relaxed max-w-6xl">
             Minty makes managing your finances simple. Just link your accounts,
             set your budget, and track your spending. Our smart insights help
             you stay on top of your goals, giving you a clear view of your
@@ -98,18 +98,16 @@ export const HowItWorksSection = () => {
             onClick={() => handleAccordionClick(`item-${index}`, index)}
           >
             <AccordionTrigger>
-              <div className="px-2">
-                <span className="mr-5 text-sm text-purple-700">{`0${index + 1}`}</span>
-                <span className="text-2xl group-hover:text-purple-700 transition-colors duration-300">
-                  {item.title}
-                </span>
-              </div>
+              <div className="text-sm text-purple-700">{`0${index + 1}`}</div>
+              <h4 className="text-xl lg:text-2xl group-hover:text-purple-700 transition-colors duration-300">
+                {item.title}
+              </h4>
             </AccordionTrigger>
             <AccordionContent
               ref={selectedItem === `item-${index}` ? descriptionRef : null}
               tabIndex={-1}
             >
-              <p className="text-muted-foreground text-lg px-2">
+              <p className="text-muted-foreground text-base lg:text-lg px-2">
                 {item.description}
               </p>
               <AnimatePresence mode="wait">

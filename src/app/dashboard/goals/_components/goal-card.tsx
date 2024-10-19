@@ -49,10 +49,10 @@ export const GoalCard = ({ goal }: { goal: Goal }) => {
         </DropdownMenu>
       </CardHeader>
       <CardContent>
-        <p className="text-xl font-bold">{goal?.name}</p>
-        <p className="text-2xl font-bold">₹{goal?.amount}</p>
+        <p className="text-lg lg:text-xl font-semibold">{goal?.name}</p>
+        <p className="text-xl lg:text-2xl font-semibold">₹{goal?.amount}</p>
 
-        <p className="text-muted-foreground mt-2">
+        <p className="text-muted-foreground text-sm lg:text-base mt-2">
           {goal?.isCompleted ? (
             isExceeded ? (
               <span>
@@ -77,24 +77,30 @@ export const GoalCard = ({ goal }: { goal: Goal }) => {
           <Progress value={goal?.progress} className="mt-2" />
         )}
         <div className="mt-4 grid grid-cols-2 gap-4">
-          <div>
-            <p className="text-muted-foreground">Category</p>
+          <div className="space-y-1">
+            <p className="text-muted-foreground text-sm lg:text-base">
+              Category
+            </p>
             <p className="font-medium">
               {goal?.category?.icon} {goal?.category?.name}
             </p>
           </div>
-          <div>
-            <p className="text-muted-foreground">Target Date</p>
+          <div className="space-y-1">
+            <p className="text-muted-foreground text-sm lg:text-base">
+              Target Date
+            </p>
             <p className="font-medium">
               {formatDate(goal?.targetDate, "dd MMM, yyyy")}
             </p>
           </div>
-          <div>
-            <p className="text-muted-foreground">Days Remaining</p>
+          <div className="space-y-1">
+            <p className="text-muted-foreground text-sm lg:text-base">
+              Days Remaining
+            </p>
             <p className="font-medium">{goal?.remainingDays} days</p>
           </div>
-          <div>
-            <p className="text-muted-foreground">Status</p>
+          <div className="space-y-1">
+            <p className="text-muted-foreground text-sm lg:text-base">Status</p>
             <Badge variant={goal?.isCompleted ? "default" : "secondary"}>
               {goal?.isCompleted ? "Completed" : "In Progress"}
             </Badge>
