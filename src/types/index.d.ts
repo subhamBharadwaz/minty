@@ -1,7 +1,10 @@
 import type { Icon as LucideIcon } from "lucide-react";
 import { Id } from "../../convex/_generated/dataModel";
+import React from "react";
 
-export type IconType = typeof LucideIcon;
+export type IconType = React.ComponentType<
+  React.ComponentProps<typeof LucideIcon>
+>;
 
 export type NavItem = {
   title: string;
@@ -11,7 +14,7 @@ export type NavItem = {
 export type SidebarNavItem = {
   title: string;
   external?: boolean;
-  icon?: keyof typeof Icon;
+  icon?: IconType;
 } & (
   | {
       href: string;
