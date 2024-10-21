@@ -3,17 +3,17 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { LeafIcon, Menu, X } from "lucide-react";
-import { Button, buttonVariants } from "@/components/ui/button";
+import { Button } from "@/components/ui/button";
 import ShimmerButton from "@/components/ui/shimmer-button";
 import { NavItem } from "@/types";
-import { Authenticated, Unauthenticated } from "convex/react";
-import { UserButton } from "@clerk/nextjs";
+import { useConvexAuth } from "convex/react";
 import { cn } from "@/lib/utils";
 import { AnimatePresence, motion } from "framer-motion";
 
 export default function HomeNav({ items }: { items?: NavItem[] }) {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { isLoading, isAuthenticated } = useConvexAuth();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -56,20 +56,13 @@ export default function HomeNav({ items }: { items?: NavItem[] }) {
 
           <div className="flex items-center gap-4">
             <div className="hidden md:block">
-              <Unauthenticated>
-                <Link href="/sign-in">
-                  <ShimmerButton className="shadow-lg">
-                    <span className="text-sm font-medium">Sign in</span>
-                  </ShimmerButton>
-                </Link>
-              </Unauthenticated>
-              <Authenticated>
-                <Link href="/dashboard">
-                  <ShimmerButton className="shadow-lg">
-                    <span className="text-sm font-medium">Dashboard</span>
-                  </ShimmerButton>
-                </Link>
-              </Authenticated>
+              <Link href={isAuthenticated ? "/dashboard" : "/sign-in"}>
+                <ShimmerButton className="shadow-lg">
+                  <span className="text-sm font-medium">
+                    {isAuthenticated ? "Dashboard" : "Sign in"}
+                  </span>
+                </ShimmerButton>
+              </Link>
             </div>
 
             <Button
@@ -109,20 +102,13 @@ export default function HomeNav({ items }: { items?: NavItem[] }) {
                       {item.title}
                     </Link>
                   ))}
-                  <Unauthenticated>
-                    <Link href="/sign-in">
-                      <ShimmerButton className="shadow-lg">
-                        <span className="text-sm font-medium">Sign in</span>
-                      </ShimmerButton>
-                    </Link>
-                  </Unauthenticated>
-                  <Authenticated>
-                    <Link href="/dashboard">
-                      <ShimmerButton className="shadow-lg">
-                        <span className="text-sm font-medium">Dashboard</span>
-                      </ShimmerButton>
-                    </Link>
-                  </Authenticated>
+                  <Link href={isAuthenticated ? "/dashboard" : "/sign-in"}>
+                    <ShimmerButton className="shadow-lg">
+                      <span className="text-sm font-medium">
+                        {isAuthenticated ? "Dashboard" : "Sign in"}
+                      </span>
+                    </ShimmerButton>
+                  </Link>
                 </nav>
               </motion.div>
             )}
