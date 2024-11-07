@@ -9,19 +9,15 @@ import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Header } from "@/components/header";
 import { Shell } from "@/components/shell";
-import { currentUser } from "@clerk/nextjs/server";
-import { UserProfile } from "@clerk/nextjs";
 import { AppearanceForm } from "@/components/appearance-form";
 
-export const metadata = {
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL as string),
-  title: "Settings",
-  description: "Manage account and website settings.",
-};
+// export const metadata = {
+//   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL as string),
+//   title: "Settings",
+//   description: "Manage account and website settings.",
+// };
 
-export default async function SettingsPage() {
-  const user = await currentUser();
-
+export default function SettingsPage() {
   return (
     <Shell className="gap-4">
       <Header
@@ -32,7 +28,6 @@ export default async function SettingsPage() {
       <Separator />
       <Tabs defaultValue="account" className="hidden w-full md:block">
         <TabsList className="grid w-full grid-cols-2">
-          {/* <TabsTrigger value="account">Account</TabsTrigger> */}
           <TabsTrigger value="appearance">Appearance</TabsTrigger>
         </TabsList>
         <TabsContent value="appearance">
