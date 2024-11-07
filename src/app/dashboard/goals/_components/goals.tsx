@@ -26,8 +26,6 @@ export const Goals = () => {
     );
   }
 
-  console.log({ goals });
-
   if (goals?.length === 0) {
     return (
       <div className="flex gap-y-6 justify-center items-center flex-col">

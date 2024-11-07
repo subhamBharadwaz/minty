@@ -25,7 +25,7 @@ export const Transactions = () => {
   });
 
   return (
-    <Card className="max-w-screen-2xl mt-12  mx-auto">
+    <Card className="w-full mt-12">
       <CardHeader>
         <CardTitle>All Transactions</CardTitle>
       </CardHeader>
@@ -33,19 +33,17 @@ export const Transactions = () => {
         {isPending ? (
           <Loader2 className="size-5 animate-spin mx-auto" />
         ) : transactions ? (
-          <div>
-            <TransactionsTable
-              onDelete={(row) => {
-                const ids = row.map((r) => r.original._id);
-                //@ts-ignore
-                mutate({ ids });
-              }}
-              columns={columns}
-              isPending={deletePending}
+          <TransactionsTable
+            onDelete={(row) => {
+              const ids = row.map((r) => r.original._id);
               //@ts-ignore
-              data={transactions}
-            />
-          </div>
+              mutate({ ids });
+            }}
+            columns={columns}
+            isPending={deletePending}
+            //@ts-ignore
+            data={transactions}
+          />
         ) : null}
       </CardContent>
     </Card>

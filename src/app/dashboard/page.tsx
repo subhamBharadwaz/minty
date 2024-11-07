@@ -1,6 +1,9 @@
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { DataGrid } from "./_components/data-grid";
+import { Shell } from "@/components/shell";
+import { Header } from "@/components/header";
+import { Separator } from "@/components/ui/separator";
 
 export default async function DashbaordPage() {
   const user = await currentUser();
@@ -8,20 +11,15 @@ export default async function DashbaordPage() {
   if (!user) return redirect("/sign-in");
 
   return (
-    <section>
-      <div className="" />
-
-      <div className="space-y-10">
-        <div className="space-y-1">
-          <h1 className="text-xl font-semibold lg:text-2xl">
-            Welcome Back, {user?.firstName?.split(" ")[0]} 👋
-          </h1>
-          <p className="text-muted-foreground max-w-[300px] text-sm">
-            Monitor your budget, expenses, and income at a glance.
-          </p>
-        </div>
-        <DataGrid />
-      </div>
-    </section>
+    <Shell className="gap-4">
+      <Header
+        title={` Welcome Back, ${user?.firstName?.split(" ")[0]} 👋`}
+        description=" Monitor your budget, expenses, and income at a glance.
+"
+        size="sm"
+      />
+      <Separator />
+      <DataGrid />
+    </Shell>
   );
 }

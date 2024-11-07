@@ -139,7 +139,6 @@ export const columns: ColumnDef<Transaction>[] = [
     id: "actions",
     cell: ({ row }) => {
       const transaction = row.original;
-      console.log({ transaction });
 
       return (
         <DropdownMenu>

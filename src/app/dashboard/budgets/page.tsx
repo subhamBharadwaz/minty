@@ -1,14 +1,17 @@
+import { Shell } from "@/components/shell";
 import { Budgets } from "./_components/budgets";
+import { Header } from "@/components/header";
+import { Separator } from "@/components/ui/separator";
 
 export default function BudgetsPage() {
   return (
-    <section>
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-y-2">
-        <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
-          Budgets
-        </h3>
-      </div>
+    <Shell className="gap-4">
+      <Header
+        title="Budgets"
+        description="Create and manage budgets to keep your spending on track and under control."
+      />
+      <Separator />
       <Budgets />
-    </section>
+    </Shell>
   );
 }

@@ -1,10 +1,14 @@
-import Nav from "@/components/nav";
-import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
-import { dashboardConfig } from "@/config/dashboard";
+import {
+  SidebarInset,
+  SidebarProvider,
+  SidebarTrigger,
+} from "@/components/ui/sidebar";
 import React from "react";
 import { DashboardSidebar } from "./_components/dashboard-sidebar";
 import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
+import { Separator } from "@/components/ui/separator";
+import DashboardBreadcrum from "./_components/dashbaord-breadcrum";
 
 export default async function DashboardLayout({
   children,
@@ -15,14 +19,17 @@ export default async function DashboardLayout({
 
   if (!user) return redirect("/sign-in");
 
-  console.log({ email: user?.emailAddresses[0].emailAddress });
   return (
     <SidebarProvider>
       <DashboardSidebar email={user && user?.emailAddresses[0].emailAddress} />
-      <main className="py-10 container">
-        <SidebarTrigger />
-        {children}
-      </main>
+      <SidebarInset>
+        <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+          <SidebarTrigger className="-ml-1" />
+          <Separator orientation="vertical" className="mr-2 h-4" />
+          <DashboardBreadcrum />
+        </header>
+        <main className="">{children}</main>
+      </SidebarInset>
     </SidebarProvider>
   );
 }

@@ -23,38 +23,43 @@ interface DashboardSidebarProps {
 export const DashboardSidebar: FC<DashboardSidebarProps> = ({ email }) => {
   return (
     <Sidebar collapsible="icon">
-      <SidebarHeader>
+      <SidebarHeader className="p-4">
         <SidebarMenu>
           <SidebarMenuItem>
             <SidebarMenuButton asChild>
               <Link href="/" className="flex items-center gap-2">
-                <LeafIcon className="size-6 fill-primary stroke-foreground" />
-                <span className="text-lg sm:text-xl font-bold">Minty</span>
+                <LeafIcon className="size-8 fill-primary stroke-foreground" />
+                <span className="text-xl sm:text-2xl font-bold">Minty</span>
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarHeader>
-      <SidebarContent>
-        <SidebarGroup className="space-y-3">
+      <SidebarContent className="p-2">
+        <SidebarGroup className="space-y-4">
           {dashboardConfig.sidevarNav.map((item) => (
             <SidebarMenuItem key={item.title}>
               <SidebarMenuButton asChild>
-                <Link href={item.href as string}>
+                <Link
+                  href={item.href as string}
+                  className="flex items-center gap-3 py-2"
+                >
                   {/* @ts-ignore */}
-                  {item.icon && <item.icon className="size-6" />}
-                  <span className="text-lg">{item.title}</span>
+                  {item.icon && <item.icon className="size-6 flex-shrink-0" />}
+                  <span className="text-base font-medium">{item.title}</span>
                 </Link>
               </SidebarMenuButton>
             </SidebarMenuItem>
           ))}
         </SidebarGroup>
       </SidebarContent>
-      <SidebarFooter>
+      <SidebarFooter className="p-4">
         <SidebarMenu>
-          <SidebarMenuItem className="flex items-center gap-x-2">
-            <UserButton />
-            <span className="truncate">{email}</span>
+          <SidebarMenuItem>
+            <div className="flex items-center gap-3 py-2">
+              <UserButton />
+              <span className="text-sm font-medium truncate">{email}</span>
+            </div>
           </SidebarMenuItem>
         </SidebarMenu>
       </SidebarFooter>

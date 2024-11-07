@@ -10,14 +10,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import EmojiPicker from "emoji-picker-react";
-import {
-  Dispatch,
-  FC,
-  SetStateAction,
-  useEffect,
-  useRef,
-  useState,
-} from "react";
+import { Dispatch, FC, SetStateAction, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { categorySchema } from "@/schema/category";
@@ -45,7 +38,6 @@ export const CategoryForm: FC<CategoryFormProps> = ({
 }) => {
   const [emojiIcon, setEmojiIcon] = useState<string>("😀");
   const [openEmojiPicker, setOpenEmojiPicker] = useState<boolean>(false);
-  const [isFocused, setIsFocused] = useState(false);
 
   const form = useForm<z.infer<typeof categorySchema>>({
     resolver: zodResolver(categorySchema),
@@ -61,7 +53,7 @@ export const CategoryForm: FC<CategoryFormProps> = ({
       setIsOpen(false);
       form.reset();
     } catch (error) {
-      console.log("Failed to create category", error);
+      console.error("Failed to create category", error);
     }
   }
 

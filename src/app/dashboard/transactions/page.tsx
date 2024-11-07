@@ -1,16 +1,16 @@
+import { Header } from "@/components/header";
 import { AddTransactionDrawer } from "./_components/add-transaction-drawer";
 import { Transactions } from "./_components/transactions";
 
 export default function TransactionsPage() {
   return (
-    <section>
-      <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-y-2">
-        <h3 className="scroll-m-20 text-2xl font-semibold tracking-tight">
-          Transactions
-        </h3>
+    <section className="container pb-8 pt-6 md:py-8">
+      <Header
+        title="Transactions"
+        description="View, categorize, and manage all your transactions in one place."
+      >
         <AddTransactionDrawer />
-      </div>
-
+      </Header>
       <Transactions />
     </section>
   );

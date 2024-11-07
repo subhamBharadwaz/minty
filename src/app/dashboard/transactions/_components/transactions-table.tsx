@@ -69,7 +69,7 @@ export function TransactionsTable<TData, TValue>({
   });
 
   return (
-    <div>
+    <>
       <div className="flex items-center py-4">
         <Input
           placeholder="Search transactions by title..."
@@ -190,6 +190,6 @@ export function TransactionsTable<TData, TValue>({
           Next
         </Button>
       </div>
-    </div>
+    </>
   );
 }

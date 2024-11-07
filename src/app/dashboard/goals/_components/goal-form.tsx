@@ -60,8 +60,6 @@ export const GoalForm: FC<GoalFormProps> = ({
 }) => {
   const [isCategoryOpen, setIsCategoryOpen] = useState<boolean>(false);
 
-  console.log({ defaultValues });
-
   const form = useForm<z.infer<typeof goalSchema>>({
     resolver: zodResolver(goalSchema),
     defaultValues: {
@@ -130,7 +128,7 @@ export const GoalForm: FC<GoalFormProps> = ({
           render={({ field }) => (
             <FormItem className="flex flex-col">
               <FormLabel>Target Date</FormLabel>
-              <Popover>
+              <Popover modal={true}>
                 <PopoverTrigger asChild>
                   <FormControl>
                     <Button

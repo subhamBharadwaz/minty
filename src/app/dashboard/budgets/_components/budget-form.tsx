@@ -63,7 +63,7 @@ export const BudgetForm: FC<BudgetFormProps> = ({
       setIsOpen(false);
       form.reset();
     } catch (error) {
-      console.log("Failed to create category", error);
+      console.error("Failed to create category", error);
     }
   }
 

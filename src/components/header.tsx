@@ -19,7 +19,7 @@ export function Header({
       <div className="grid gap-1">
         <h1
           className={cn(
-            "line-clamp-1 text-3xl font-bold tracking-tight",
+            "text-xl lg:text-2xl 2xl:text-3xl font-bold tracking-tight",
             size === "default" && "md:text-4xl",
           )}
         >
