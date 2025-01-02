@@ -12,34 +12,28 @@ import Image from "next/image";
 
 const accordionData = [
   {
-    title: "Connect Your Accounts",
-    description:
-      "Effortlessly link your bank accounts to Minty in seconds. Our secure system automatically pulls your transaction data, so you never miss a detail.",
-    src: "/images/1.jpg",
-  },
-  {
     title: "Track Spending",
     description:
       "Get real-time insights into your expenses, organized by categories. Stay on top of where your money goes and keep your budget balanced.",
-    src: "/images/2.jpg",
+    src: "/images/track-spending.png",
   },
   {
     title: "Set Budgets & Goals",
     description:
       "Easily set custom budgets for different categories and plan savings goals. Minty helps you stay aligned with your financial aspirations.",
-    src: "/images/3.jpg",
+    src: "/images/budget-goals.png",
   },
   {
     title: "Monitor Your Progress",
     description:
       "Get instant visual feedback on your spending and savings. Minty’s dynamic charts and reports make it easy to adjust and stay on track.",
-    src: "/images/4.jpg",
+    src: "/images/monitor-progress.png",
   },
   {
     title: "Achieve Financial Success",
     description:
       "With all your data in one place, Minty empowers you to make smarter financial decisions and achieve your goals faster.",
-    src: "/images/5.jpg",
+    src: "/images/financial-success.png",
   },
 ];
 
@@ -63,7 +57,7 @@ export const HowItWorksSection = () => {
   };
 
   return (
-    <section className="min-h-screen container py-24">
+    <section id="how-it-works" className="min-h-screen container pt-24">
       <motion.div
         className="space-y-5"
         initial={{ opacity: 0, y: 20 }}

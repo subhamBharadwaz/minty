@@ -1,14 +1,11 @@
-import Image from "next/image";
-import { AnimatedListDemo } from "./_components/transaction-animated-list";
 import { HowItWorksSection } from "./_components/sections/how-it-works";
-import Link from "next/link";
-import { LeafIcon } from "lucide-react";
 import { landingConfig } from "@/config/landing";
 import { currentUser } from "@clerk/nextjs/server";
-import { Button, buttonVariants } from "@/components/ui/button";
-import { cn } from "@/lib/utils";
-import ShimmerButton from "@/components/ui/shimmer-button";
 import HomeNav from "./_components/nav-menu";
+import { WhyMintySection } from "./_components/sections/why-minty";
+import { PricingSection } from "./_components/sections/pricing";
+import { OpenSourceSection } from "./_components/sections/open-source";
+import Footer from "@/components/footer";
 
 export default async function Home() {
   const user = await currentUser();
@@ -29,18 +26,11 @@ export default async function Home() {
               </p>
               <div className="mt-12 flex flex-col gap-x-6 gap-y-4 sm:flex-row">
                 <a
-                  className="inline-flex items-center justify-center px-4 py-[calc(theme(spacing.2)-1px)] rounded-full border border-transparent bg-gray-950 shadow-md whitespace-nowrap text-base font-medium text-white data-[disabled]:bg-gray-950 data-[hover]:bg-gray-800 data-[disabled]:opacity-40"
+                  className="inline-flex items-center justify-center px-4 py-[calc(theme(spacing.3)-1px)] rounded-full border border-transparent bg-gray-950 shadow-md whitespace-nowrap text-base font-medium text-white data-[disabled]:bg-gray-950 data-[hover]:bg-gray-800 data-[disabled]:opacity-40"
                   data-headlessui-state=""
                   href="#"
                 >
-                  Get started
-                </a>
-                <a
-                  className="relative inline-flex items-center justify-center px-4 py-[calc(theme(spacing.2)-1px)] rounded-full border border-transparent bg-white/15 shadow-md ring-1 ring-[#D15052]/15 after:absolute after:inset-0 after:rounded-full after:shadow-[inset_0_0_2px_1px_#ffffff4d] whitespace-nowrap text-base font-medium text-gray-950 data-[disabled]:bg-white/15 data-[hover]:bg-white/20 data-[disabled]:opacity-40"
-                  data-headlessui-state=""
-                  href="/pricing"
-                >
-                  See pricing
+                  Start Tracking Today
                 </a>
               </div>
             </div>
@@ -48,6 +38,10 @@ export default async function Home() {
         </div>
       </section>
       <HowItWorksSection />
+      <WhyMintySection />
+      <PricingSection />
+      <OpenSourceSection />
+      <Footer />
     </>
   );
 }
