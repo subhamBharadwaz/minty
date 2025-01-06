@@ -41,6 +41,9 @@ export const getAllBudgets = query({
         )
         .reduce((sum, tx) => sum + tx.amount, 0);
 
+      // Calculate the actual remaining amount based on the budget amount and transactions
+      const remaining = budget.amount - totalSpend + totalIncome;
+
       return {
         ...budget,
         category: {
@@ -49,6 +52,7 @@ export const getAllBudgets = query({
         },
         spend: totalSpend,
         income: totalIncome,
+        remaining: remaining,
       };
     });
     return budgetWithDetails;
@@ -97,11 +101,25 @@ export const updateBudget = mutation({
       throw new ConvexError("Budget not found");
     }
 
-    // Calculate the spent amount (existingAmount - remaining)
-    const spent = existingBudget.amount - existingBudget.remaining;
+    // Get all transactions for this category
+    const transactions = await ctx.db
+      .query("transactions")
+      .withIndex("by_category", (q) =>
+        q.eq("categoryId", existingBudget.categoryId),
+      )
+      .collect();
+
+    // Calculate total spend and income
+    const totalSpend = transactions
+      .filter((tx) => tx.type === "expense")
+      .reduce((sum, tx) => sum + tx.amount, 0);
+
+    const totalIncome = transactions
+      .filter((tx) => tx.type === "income")
+      .reduce((sum, tx) => sum + tx.amount, 0);
 
     // Calculate the new remaining amount
-    const newRemaining = args.amount - spent;
+    const newRemaining = args.amount - totalSpend + totalIncome;
 
     await ctx.db.patch(args.id, {
       categoryId: args.categoryId,

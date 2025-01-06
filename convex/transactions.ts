@@ -272,27 +272,28 @@ export const deleteTransaction = mutation({
       );
     }
 
-    const budget = await ctx.db
-      .query("budgets")
-      .withIndex("by_category", (q) =>
-        q.eq("categoryId", existingTransaction.categoryId),
-      )
-      .first();
-
-    if (!budget) {
-      throw new ConvexError("No budget found for the selected category");
-    }
-    // Adjust the remaining based on the transaction type
-    let remaining = budget.remaining;
-    if (existingTransaction.type === "expense") {
-      remaining += existingTransaction.amount; // Revert the expense
-    } else if (existingTransaction.type === "income") {
-      remaining -= existingTransaction.amount; // Revert the income
+    // If there's a categoryId, try to update the associated budget
+    if (existingTransaction.categoryId) {
+      const budget = await ctx.db
+        .query("budgets")
+        .withIndex("by_category", (q) =>
+          q.eq("categoryId", existingTransaction.categoryId),
+        )
+        .first();
+      // Only update budget if one exists
+      if (budget) {
+        let remaining = budget.remaining;
+        if (existingTransaction.type === "expense") {
+          remaining += existingTransaction.amount; // Revert the expense
+        } else if (existingTransaction.type === "income") {
+          remaining -= existingTransaction.amount; // Revert the income
+        }
+        await ctx.db.patch(budget._id, { remaining: remaining });
+      }
     }
 
     //Delete the transaction and patch the budget
     await ctx.db.delete(args.id);
-    await ctx.db.patch(budget._id, { remaining: remaining });
   },
 });
 
