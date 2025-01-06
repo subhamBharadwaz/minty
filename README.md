@@ -2,6 +2,8 @@
 
 Minty is a comprehensive finance tracker application designed to help users manage their financial activities efficiently. With Minty, you can track transactions, set budgets, establish financial goals, and categorize expenses with ease. The app is built with a modern tech stack that ensures high performance and seamless user experience.
 
+![Minty](https://github.com/user-attachments/assets/cc85b718-e302-4e84-98ea-e6905432142c)
+
 ## Features
 
 - **Transaction Management**: Add, edit, and categorize your financial transactions.
@@ -34,9 +36,9 @@ Minty is a comprehensive finance tracker application designed to help users mana
 
 ### Prerequisites
 
-Ensure that you have bun installed:
+Ensure that you have pnpm installed:
 
-- [Bun](https://bun.sh/)
+- [PnPM](https://pnpm.io/)
 
 ### Installation
 
@@ -55,7 +57,7 @@ Ensure that you have bun installed:
 3. Install the dependencies:
 
    ```bash
-   bun install
+   pnpm install
    ```
 
 ### Running the Application
@@ -63,8 +65,8 @@ Ensure that you have bun installed:
 1. Start the development server:
 
    ```bash
-   bunx convex dev
-   bun dev
+   pnpx convex dev
+   pnpm dev
    ```
 
 2. Open [http://localhost:3000](http://localhost:3000) in your browser to view the app.
