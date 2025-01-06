@@ -61,7 +61,7 @@ export const TransactionForm: FC<TransactionFormProps> = ({
       id: id,
       type: defaultValues?.type || "expense",
       title: defaultValues?.title || "",
-      amount: defaultValues?.amount,
+      amount: defaultValues?.amount || 0,
       emoji: defaultValues?.emoji,
       date: defaultValues?.date ? new Date(defaultValues.date) : undefined,
       categoryId: defaultValues?.categoryId || "",

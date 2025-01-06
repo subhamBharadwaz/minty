@@ -1,10 +1,11 @@
 import { Header } from "@/components/header";
 import { AddTransactionDrawer } from "./_components/add-transaction-drawer";
 import { Transactions } from "./_components/transactions";
+import { Shell } from "@/components/shell";
 
 export default function TransactionsPage() {
   return (
-    <section className="container pb-8 pt-6 md:py-8">
+    <Shell className="gap-4">
       <Header
         title="Transactions"
         description="View, categorize, and manage all your transactions in one place."
@@ -12,6 +13,6 @@ export default function TransactionsPage() {
         <AddTransactionDrawer />
       </Header>
       <Transactions />
-    </section>
+    </Shell>
   );
 }
