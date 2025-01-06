@@ -12,12 +12,14 @@ export const OpenSourceSection = () => {
   return (
     <section ref={sectionRef} className="container min-h-[25rem] py-24">
       <motion.div
-        className="flex flex-col items-center"
+        className="flex flex-col items-center gap-y-5"
         initial={false}
         animate={{ y: isInView ? 0 : 10, opacity: isInView ? 1 : 0 }}
         transition={{ delay: 0.5, duration: 0.75, ease: "easeIn" }}
       >
-        <WordPullUp className="text-center">Proudly Open Source</WordPullUp>
+        <WordPullUp className="leading-tight text-center">
+          Proudly Open Source
+        </WordPullUp>
         <p className="max-w-xl text-center text-lg leading-relaxed text-muted-foreground">
           Our source code is available on GitHub - feel free to read, review, or
           contribute to it however you want!
