@@ -1,29 +1,67 @@
 "use client";
 import { WobbleCard } from "@/components/wobble-card";
-import { motion } from "framer-motion";
+import { motion, useInView } from "motion/react";
 import Image from "next/image";
+import { useRef } from "react";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.75,
+      ease: [0.23, 1, 0.32, 1],
+    },
+  },
+};
 
 export const WhyMintySection = () => {
+  const containerRef = useRef<HTMLDivElement | null>(null);
+
+  const isInView = useInView(containerRef, { once: true });
+
   return (
     <section id="features" className="min-h-screen container pt-24">
       <motion.div
+        ref={containerRef}
         className="space-y-5"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeIn" }}
+        variants={containerVariants}
+        initial="hidden"
+        animate={isInView ? "visible" : "hidden"}
       >
-        <h3 className="tracking-wider uppercase text-purple-700 text-sm lg:text-lg">
+        <motion.h3
+          variants={itemVariants}
+          className="tracking-wider uppercase text-purple-700 text-sm lg:text-lg"
+        >
           Why Choose Minty?
-        </h3>
-        <div className="overflow-hidden">
+        </motion.h3>
+        <motion.div variants={itemVariants} className="overflow-hidden">
           <p className="text-xl md:text-2xl xl:text-4xl font-medium leading-relaxed max-w-6xl">
             Minty simplifies your finances with smart tools for budgeting,
             tracking, and saving. Stay in control and achieve your goals
             effortlessly!
           </p>
-        </div>
+        </motion.div>
       </motion.div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-20  w-full">
+      <motion.div
+        variants={itemVariants}
+        className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-20  w-full"
+      >
         <WobbleCard
           containerClassName="col-span-1 lg:col-span-2 h-full bg-green-700 min-h-[500px] lg:min-h-[300px]"
           className=""
@@ -87,7 +125,7 @@ export const WhyMintySection = () => {
             className="absolute -right-4 lg:-right-[10%]  -bottom-10 object-contain rounded-2xl"
           />
         </WobbleCard>
-      </div>
+      </motion.div>
     </section>
   );
 };

@@ -4,7 +4,7 @@ import {
   AccordionItem,
   AccordionTrigger,
 } from "@/components/ui/accordion";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 import { ArrowRightIcon } from "@radix-ui/react-icons";
 import { cn } from "@/lib/utils";
 import Image from "next/image";

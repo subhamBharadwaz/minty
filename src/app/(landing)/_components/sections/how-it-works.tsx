@@ -7,8 +7,34 @@ import {
 } from "@/components/ui/accordion";
 import HoverableAccordion from "../hoverable-accordion";
 import { useState, useRef } from "react";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, useInView } from "motion/react";
 import Image from "next/image";
+
+const containerVariants = {
+  hidden: { opacity: 0 },
+  visible: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2,
+      delayChildren: 0.1,
+    },
+  },
+};
+
+const itemVariants = {
+  hidden: {
+    opacity: 0,
+    y: 20,
+  },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: {
+      duration: 0.75,
+      ease: [0.23, 1, 0.32, 1],
+    },
+  },
+};
 
 const accordionData = [
   {
@@ -49,6 +75,12 @@ export const HowItWorksSection = () => {
   const [selectedItem, setSelectedItem] = useState<string | null>(null);
   const descriptionRef = useRef<HTMLDivElement | null>(null);
 
+  const headerRef = useRef<HTMLDivElement | null>(null);
+  const accordionRef = useRef<HTMLDivElement | null>(null);
+
+  const headerInView = useInView(headerRef, { once: true, amount: 0.3 });
+  const accordionInView = useInView(accordionRef, { once: true, amount: 0.1 });
+
   const handleAccordionClick = (itemValue: string, index: number) => {
     setSelectedItem(itemValue);
     setTimeout(() => {
@@ -59,77 +91,88 @@ export const HowItWorksSection = () => {
   return (
     <section id="how-it-works" className="min-h-screen container pt-24">
       <motion.div
+        ref={headerRef}
         className="space-y-5"
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.4, ease: "easeIn" }}
+        variants={containerVariants}
+        initial="hidden"
+        animate={headerInView ? "visible" : "hidden"}
       >
-        <h3 className="tracking-wider uppercase text-purple-700 text-sm lg:text-lg">
+        <motion.h3
+          variants={itemVariants}
+          className="tracking-wider uppercase text-purple-700 text-sm lg:text-lg"
+        >
           How it works
-        </h3>
-        <div className="overflow-hidden">
+        </motion.h3>
+        <motion.div variants={itemVariants} className="overflow-hidden">
           <p className="text-xl md:text-2xl xl:text-4xl font-medium leading-relaxed max-w-6xl">
             Minty makes managing your finances simple. Just link your accounts,
             set your budget, and track your spending. Our smart insights help
             you stay on top of your goals, giving you a clear view of your
             income, expenses, and savings—all in one place.
           </p>
-        </div>
+        </motion.div>
       </motion.div>
-
-      <HoverableAccordion
-        type="single"
+      <motion.div
+        ref={accordionRef}
+        variants={containerVariants}
+        initial="hidden"
+        animate={accordionInView ? "visible" : "hidden"}
         className="w-full my-20"
-        images={accordionImages}
-        selectedItem={selectedItem}
-        setSelectedItem={setSelectedItem}
       >
-        {accordionData.map((item, index) => (
-          <AccordionItem
-            className="group hover:bg-purple-100/30 py-7  transition-colors duration-300"
-            value={`item-${index}`}
-            key={item.title}
-            onClick={() => handleAccordionClick(`item-${index}`, index)}
-          >
-            <AccordionTrigger>
-              <div className="text-sm text-purple-700">{`0${index + 1}`}</div>
-              <h4 className="text-xl lg:text-2xl group-hover:text-purple-700 transition-colors duration-300">
-                {item.title}
-              </h4>
-            </AccordionTrigger>
-            <AccordionContent
-              ref={selectedItem === `item-${index}` ? descriptionRef : null}
-              tabIndex={-1}
+        <HoverableAccordion
+          type="single"
+          className="w-full"
+          images={accordionImages}
+          selectedItem={selectedItem}
+          setSelectedItem={setSelectedItem}
+        >
+          {accordionData.map((item, index) => (
+            <AccordionItem
+              className="group hover:bg-purple-100/30 py-7  transition-colors duration-300"
+              value={`item-${index}`}
+              key={item.title}
+              onClick={() => handleAccordionClick(`item-${index}`, index)}
             >
-              <p className="text-muted-foreground text-base lg:text-lg px-2">
-                {item.description}
-              </p>
-              <AnimatePresence mode="wait">
-                {selectedItem === `item-${index}` &&
-                  accordionImages[`item-${index}`] && (
-                    <motion.div
-                      key={`mobile-image-${index}`}
-                      initial={{ opacity: 0 }}
-                      animate={{ opacity: 1 }}
-                      exit={{ opacity: 0 }}
-                      transition={{ duration: 0.4, ease: "easeOut" }}
-                      className="mt-4 lg:hidden"
-                    >
-                      <Image
-                        priority={true}
-                        src={accordionImages[`item-${index}`]}
-                        alt={`Image for ${item.title}`}
-                        height={300}
-                        width={500}
-                        className="w-full h-auto"
-                      />
-                    </motion.div>
-                  )}
-              </AnimatePresence>
-            </AccordionContent>
-          </AccordionItem>
-        ))}
-      </HoverableAccordion>
+              <AccordionTrigger>
+                <div className="text-sm text-purple-700">{`0${index + 1}`}</div>
+                <h4 className="text-xl lg:text-2xl group-hover:text-purple-700 transition-colors duration-300">
+                  {item.title}
+                </h4>
+              </AccordionTrigger>
+              <AccordionContent
+                ref={selectedItem === `item-${index}` ? descriptionRef : null}
+                tabIndex={-1}
+              >
+                <p className="text-muted-foreground text-base lg:text-lg px-2">
+                  {item.description}
+                </p>
+                <AnimatePresence mode="wait">
+                  {selectedItem === `item-${index}` &&
+                    accordionImages[`item-${index}`] && (
+                      <motion.div
+                        key={`mobile-image-${index}`}
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.4, ease: "easeOut" }}
+                        className="mt-4 lg:hidden"
+                      >
+                        <Image
+                          priority={true}
+                          src={accordionImages[`item-${index}`]}
+                          alt={`Image for ${item.title}`}
+                          height={300}
+                          width={500}
+                          className="w-full h-auto"
+                        />
+                      </motion.div>
+                    )}
+                </AnimatePresence>
+              </AccordionContent>
+            </AccordionItem>
+          ))}
+        </HoverableAccordion>
+      </motion.div>
     </section>
   );
 };

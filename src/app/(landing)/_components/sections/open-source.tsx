@@ -2,7 +2,7 @@
 import { buttonVariants } from "@/components/ui/button";
 import { WordPullUp } from "@/components/word-pull-up-anim";
 import { cn } from "@/lib/utils";
-import { motion, useInView } from "framer-motion";
+import { motion, useInView } from "motion/react";
 import { Github } from "lucide-react";
 import { useRef } from "react";
 
@@ -23,7 +23,7 @@ export const OpenSourceSection = () => {
           contribute to it however you want!
         </p>
         <a
-          href="https://github.com/subhamBharadwaz/scribbly"
+          href="https://github.com/subhamBharadwaz/minty"
           className={cn(
             buttonVariants({ size: "lg" }),
             "text- cursor-pointer mt-4 gap-x-3 bg-github-gradient text-white transition-shadow duration-300  hover:shadow-[0px_4px_30px] hover:shadow-[rgb(55_65_81_/_50%)]",

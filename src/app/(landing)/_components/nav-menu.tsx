@@ -3,12 +3,11 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { LeafIcon, Menu, X } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import ShimmerButton from "@/components/ui/shimmer-button";
+import { Button, buttonVariants } from "@/components/ui/button";
 import { NavItem } from "@/types";
 import { useConvexAuth } from "convex/react";
 import { cn } from "@/lib/utils";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion } from "motion/react";
 
 export default function HomeNav({ items }: { items?: NavItem[] }) {
   const [isScrolled, setIsScrolled] = useState(false);
@@ -56,12 +55,16 @@ export default function HomeNav({ items }: { items?: NavItem[] }) {
 
           <div className="flex items-center gap-4">
             <div className="hidden md:block">
-              <Link href={isAuthenticated ? "/dashboard" : "/sign-in"}>
-                <ShimmerButton className="shadow-lg">
-                  <span className="text-sm font-medium">
-                    {isAuthenticated ? "Dashboard" : "Sign in"}
-                  </span>
-                </ShimmerButton>
+              <Link
+                className={cn(
+                  buttonVariants({ size: "lg" }),
+                  "w-fit bg-slate-900 text-slate-100 hover:bg-slate-950",
+                )}
+                href={isAuthenticated ? "/dashboard" : "/sign-in"}
+              >
+                <span className="text-sm font-medium">
+                  {isAuthenticated ? "Dashboard" : "Sign in"}
+                </span>
               </Link>
             </div>
 
@@ -89,7 +92,7 @@ export default function HomeNav({ items }: { items?: NavItem[] }) {
                 animate={{ y: 0 }}
                 exit={{ y: -200 }}
                 transition={{ duration: 0.4, ease: "easeOut" }}
-                className="md:hidden py-4 bg-background h-36 w-full rounded-md p-3"
+                className="md:hidden py-4 bg-background h-44 w-full rounded-md p-3"
               >
                 <nav className="flex flex-col gap-4">
                   {items?.map((item) => (
@@ -102,12 +105,16 @@ export default function HomeNav({ items }: { items?: NavItem[] }) {
                       {item.title}
                     </Link>
                   ))}
-                  <Link href={isAuthenticated ? "/dashboard" : "/sign-in"}>
-                    <ShimmerButton className="shadow-lg">
-                      <span className="text-sm font-medium">
-                        {isAuthenticated ? "Dashboard" : "Sign in"}
-                      </span>
-                    </ShimmerButton>
+                  <Link
+                    className={cn(
+                      buttonVariants(),
+                      "w-fit bg-slate-900 text-slate-100 hover:bg-slate-950",
+                    )}
+                    href={isAuthenticated ? "/dashboard" : "/sign-in"}
+                  >
+                    <span className="text-sm font-medium">
+                      {isAuthenticated ? "Dashboard" : "Sign in"}
+                    </span>
                   </Link>
                 </nav>
               </motion.div>
