@@ -9,6 +9,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import { Separator } from "@/components/ui/separator";
 import DashboardBreadcrum from "./_components/dashbaord-breadcrum";
+import Footer from "@/components/footer";
 
 export default async function DashboardLayout({
   children,
@@ -21,7 +22,11 @@ export default async function DashboardLayout({
 
   return (
     <SidebarProvider>
-      <DashboardSidebar email={user && user?.emailAddresses[0].emailAddress} />
+      <DashboardSidebar
+        name={user && (user?.fullName as string)}
+        image={user && user?.imageUrl}
+        email={user && user?.emailAddresses[0].emailAddress}
+      />
       <SidebarInset>
         <header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
           <SidebarTrigger className="-ml-1" />

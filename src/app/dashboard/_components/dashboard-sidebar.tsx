@@ -11,16 +11,22 @@ import {
   SidebarMenuItem,
 } from "@/components/ui/sidebar";
 import { dashboardConfig } from "@/config/dashboard";
-import { UserButton } from "@clerk/nextjs";
 import { LeafIcon } from "lucide-react";
 import Link from "next/link";
 import { FC } from "react";
+import { UserAccountNav } from "./user-account-nav";
 
 interface DashboardSidebarProps {
   email: string;
+  name: string;
+  image: string;
 }
 
-export const DashboardSidebar: FC<DashboardSidebarProps> = ({ email }) => {
+export const DashboardSidebar: FC<DashboardSidebarProps> = ({
+  email,
+  name,
+  image,
+}) => {
   return (
     <Sidebar collapsible="icon">
       <SidebarHeader className="p-4">
@@ -57,7 +63,13 @@ export const DashboardSidebar: FC<DashboardSidebarProps> = ({ email }) => {
         <SidebarMenu>
           <SidebarMenuItem>
             <div className="flex items-center gap-3 py-2">
-              <UserButton />
+              <UserAccountNav
+                user={{
+                  name,
+                  image,
+                  email,
+                }}
+              />
               <span className="text-sm font-medium truncate">{email}</span>
             </div>
           </SidebarMenuItem>

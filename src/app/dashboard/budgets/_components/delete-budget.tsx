@@ -33,12 +33,10 @@ export const DeleteBudget = ({ id }: { id: Id<"budgets"> }) => {
   return (
     <AlertDialog open={dialogOpen} onOpenChange={setDialogOpen}>
       <AlertDialogTrigger asChild>
-        <>
+        <Button variant="ghost" className="p-0 h-6">
           <Trash2 className="size-4 mr-2" />
-          <Button variant="ghost" className="p-0 h-6">
-            Delete
-          </Button>
-        </>
+          Delete
+        </Button>
       </AlertDialogTrigger>
       <AlertDialogContent>
         <AlertDialogHeader>
