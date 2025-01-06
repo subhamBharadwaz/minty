@@ -1,0 +1,27 @@
+{
+  "name": "Minty - Finance Tracker",
+  "short_name": "Minty",
+  "description": "Easily track your finances and manage your budget with Minty, the ultimate finance tracker app.",
+  "start_url": "/",
+  "background_color": "#ffffff",
+  "theme_color": "#32a852",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    },
+    {
+      "src": "/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "lang": "en",
+  "categories": ["finance", "productivity", "tools"]
+}

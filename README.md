@@ -24,7 +24,7 @@ Minty is a comprehensive finance tracker application designed to help users mana
 - **UI Components**: [Shadcn/ui](https://ui.shadcn.com/)  
   Pre-built, accessible UI components for a modern and clean design.
 
-- **Animations**: [Framer Motion](https://www.framer.com/motion/)  
+- **Animations**: [Motion](https://www.motion.dev)  
   Smooth and powerful animations that bring subtle shuttle effects to life.
 
 - **Form Management**: [React Hook Form](https://react-hook-form.com/) & [Zod](https://zod.dev/)  
