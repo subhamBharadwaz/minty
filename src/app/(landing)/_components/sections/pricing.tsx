@@ -29,7 +29,7 @@ const container = {
 };
 export const PricingSection = () => {
   return (
-    <section id="pricing" className="min-h-screen container pt-24">
+    <section id="pricing" className="min-h-[50vh] container pt-24">
       <motion.div
         className="space-y-5"
         initial={{ opacity: 0, y: 20 }}

@@ -10,7 +10,7 @@ export const OpenSourceSection = () => {
   const sectionRef = useRef<HTMLElement>(null);
   const isInView = useInView(sectionRef, { once: true });
   return (
-    <section ref={sectionRef} className="container min-h-[50vh] pt-24">
+    <section ref={sectionRef} className="container min-h-[25rem] py-24">
       <motion.div
         className="flex flex-col items-center"
         initial={false}
