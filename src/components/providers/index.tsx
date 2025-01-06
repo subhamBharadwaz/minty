@@ -7,6 +7,7 @@ import { ConvexReactClient } from "convex/react";
 import { ReactNode } from "react";
 import { ConvexProviderWithClerk } from "convex/react-clerk";
 import { ThemeProvider } from "./theme";
+import { usePathname } from "next/navigation";
 
 const convex = new ConvexReactClient(
   process.env.NEXT_PUBLIC_CONVEX_URL as string,
@@ -26,8 +27,14 @@ const queryClient = new QueryClient({
 convexQueryClient.connect(queryClient);
 
 export function Providers({ children }: { children: ReactNode }) {
+  const pathname = usePathname();
   return (
-    <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+    <ThemeProvider
+      forcedTheme={pathname === "/" ? "light" : undefined}
+      attribute="class"
+      defaultTheme="light"
+      enableSystem
+    >
       <ConvexProviderWithClerk client={convex} useAuth={useAuth}>
         <QueryClientProvider client={queryClient}>
           {children}
